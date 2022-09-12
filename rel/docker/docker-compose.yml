@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  alp:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+      target: scratch_app
+      args:
+        OS_VERSION: 3.16.0
+        ELIXIR: 1.13.4
+        ERLANG: 24.3.4.2
+        ERLANG_MAJOR: 24
+        ORG: docker.io
+        APP: eidfs
+        APP_VERSION: 0.1.0
+        ERTS_VSN: 12.3.2.2
+    environment:
+      SECRET_KEY_BASE: L47EdekUax7eVLtVANUXJvxVHXWA84jucBJCk1rv0iM0oBlmhWKZHWt5g5LJ1RDy
+      APP_SSL_KEY_PATH: "priv/cert/selfsigned_key.pem"
+      APP_SSL_CERT_PATH: "priv/cert/selfsigned.pem"
+    ports:
+      - 4000:443
+    
+  deb:
+    build:
+      context: ../..
+      dockerfile: debian.dockerfile
+      target: scratch_app
+      args:
+        OS_VERSION: 11.4
+        ELIXIR: 1.13.4
+        ERLANG: 24.3.4.2
+        ERLANG_MAJOR: 24
+        ORG: docker.io
+        APP: eidfs
+        APP_VERSION: 0.1.0
+        ERTS_VSN: 12.3.2.2
+    environment:
+      SECRET_KEY_BASE: L47EdekUax7eVLtVANUXJvxVHXWA84jucBJCk1rv0iM0oBlmhWKZHWt5g5LJ1RDy
+      APP_SSL_KEY_PATH: "priv/cert/selfsigned_key.pem"
+      APP_SSL_CERT_PATH: "priv/cert/selfsigned.pem"
+    ports:
+      - 4001:443

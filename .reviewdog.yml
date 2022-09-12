@@ -1,0 +1,24 @@
+runner:
+  dialyzer:
+    cmd: mix dialyzer --no-check --format=github
+    errorformat:
+      - "::warning file=%f,line=%l,title=%m"
+    level: warning
+    name: dialyzer
+  credo:
+    cmd: mix credo suggest -a --strict --format=flycheck --config-file=./config/.credo.exs
+    errorformat:
+      - "%f:%l:%c: %m"
+      - "%f:%l: %m"
+    level: warning
+    name: credo
+  sobelow:
+    cmd: sobelow --exit=Low --format=json | jq -f ./sobelow-to-rdjson.jq -c
+    format: rdjson
+    level: error
+    name: sobelow
+  hadolint:
+    cmd: hadolint --config .hadolint.yml -f json ./alpine.dockerfile ./debian.dockerfile | jq -f ./hadolint-to-rdjson.jq -c
+    format: rdjson
+    level: error
+    name: hadolint

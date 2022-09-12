@@ -1,0 +1,8 @@
+/assets/node_modules/
+/priv/static/
+/priv/plts/.gitkeep
+/priv/pest/.gitkeep
+/.elixir_ls/
+/.vscode/
+Earthfile
+*.DETS

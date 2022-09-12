@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+      "vscode-icons-team.vscode-icons",
+      "jakebecker.elixir-ls",
+      "phoenixframework.phoenix",
+      "eamodio.gitlens",
+      "mikestead.dotenv",
+      "earthly.earthfile-syntax-highlighting",
+      "pgourlain.erlang",
+      "ms-vscode-remote.remote-containers",
+      "ms-azuretools.vscode-docker"
+    ]
+}

@@ -1,0 +1,10 @@
+failure-threshold: warning
+ignored:
+  - DL3048
+override:
+  info:
+    - DL3018
+    - DL3008
+    - SC3057
+    - SC2046
+    - SC2038
