@@ -10,9 +10,6 @@ updates:
       prefix-development: mix dev
       include: scope
     open-pull-requests-limit: 5
-    rebase-strategy: auto
-    vendor: false
-    versioning-strategy: auto
     
   - package-ecosystem: docker
     directory: "/rel/docker"
@@ -22,9 +19,6 @@ updates:
       prefix: docker
       include: scope
     open-pull-requests-limit: 5
-    rebase-strategy: auto
-    vendor: false
-    versioning-strategy: auto
     
   - package-ecosystem: github-actions
     directory: "/"
@@ -34,6 +28,3 @@ updates:
       prefix: actions
       include: scope
     open-pull-requests-limit: 5
-    rebase-strategy: auto
-    vendor: false
-    versioning-strategy: auto

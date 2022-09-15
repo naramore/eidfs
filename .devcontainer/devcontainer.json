@@ -1,45 +1,38 @@
 {
-	"name": "Elixir (Community)",
-	"build": {
-		"dockerfile": "Dockerfile",
-		"args": {
-			// Elixir Version: 1.9, 1.10, 1.10.4, ...
-			"VARIANT": "1.13.4",
-			"COMMON_SCRIPT_SHA": "dev-mode"
-		}
+	"name": "Docker from Docker",
+	"dockerFile": "dev.dockerfile",
+	"runArgs": ["--init"],
+	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
+	"overrideCommand": false,
+	
+	// Use this environment variable if you need to bind mount your local source code into a new container.
+	"remoteEnv": {
+		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
 	},
 
 	// Configure tool-specific properties.
 	"customizations": {
 		// Configure properties specific to VS Code.
-		"vscode": {			
+		"vscode": {	
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-        "vscode-icons-team.vscode-icons",
-        "jakebecker.elixir-ls",
+				"ms-azuretools.vscode-docker",
+				"vscode-icons-team.vscode-icons",
+				"eamodio.gitlens",
+				"mikestead.dotenv",
+				"jakebecker.elixir-ls",
         "phoenixframework.phoenix",
-        "eamodio.gitlens",
-        "mikestead.dotenv",
-        "earthly.earthfile-syntax-highlighting",
-        "pgourlain.erlang",
-        "ms-vscode-remote.remote-containers",
-        "ms-azuretools.vscode-docker"
+				"pgourlain.erlang"
 			]
 		}
 	},
-
+	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [4000, 4001],
-  
-  // Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker.
-	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "mix deps.get",
+	"postCreateCommand": "sudo earthly bootstrap --with-autocomplete",
 
-	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode",
-  "features": {
-		"docker-from-docker": "20.10"
-	}
+	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode"
 }

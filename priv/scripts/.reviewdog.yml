@@ -18,7 +18,7 @@ runner:
     level: error
     name: sobelow
   hadolint:
-    cmd: hadolint --config .hadolint.yml -f json ./alpine.dockerfile ./debian.dockerfile | jq -f ./hadolint-to-rdjson.jq -c
+    cmd: hadolint --config .hadolint.yml -f json ./alpine.dockerfile ./debian.dockerfile ./.devcontainer/Dockerfile | jq -f ./hadolint-to-rdjson.jq -c
     format: rdjson
     level: error
     name: hadolint

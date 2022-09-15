@@ -35,3 +35,4 @@ npm-debug.log
 /priv/pest/pest.dat
 /priv/plts/*.plt*
 /.elixir_ls
+/.tmp-earthly*
