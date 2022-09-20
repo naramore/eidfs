@@ -2,7 +2,7 @@
 ARG OS_VERSION
 
 # build erlang otp from source
-FROM debian:${OS_VERSION} AS erlang_build
+FROM debian:${OS_VERSION} AS debian_erlang_build
 
 ARG ERLANG
 ENV OS_MAJOR="$(cat /etc/issue | grep 'Debian GNU/Linux ' | cut -d' ' -f3)"
@@ -83,7 +83,7 @@ RUN scanelf --nobanner -E ET_DYN -BF '%F' --recursive /usr/local | xargs -r stri
 
 #######################################
 # minimal erlang distribution
-FROM debian:${OS_VERSION} AS erlang
+FROM debian:${OS_VERSION} AS debian_erlang
 
 ARG OS_VERSION
 ARG ERLANG
@@ -107,12 +107,12 @@ RUN apt-get update && \
     libsctp1
 
 # copy erlang installation from build
-COPY --from=erlang_build /usr/local /usr/local
+COPY --from=debian_erlang_build /usr/local /usr/local
 ENV LANG=C.UTF-8
 
 #######################################
 # build elixir from source
-FROM debian:${OS_VERSION} AS elixir_build
+FROM debian:${OS_VERSION} AS debian_elixir_build
 
 # install elixir build dependencies
 RUN apt-get update && apt-get -y --no-install-recommends install \
@@ -131,7 +131,7 @@ RUN make -o compile DESTDIR=/ELIXIR_LOCAL install
 
 #######################################
 # minimal elixir distribution
-FROM erlang AS elixir
+FROM debian_erlang AS debian_elixir
 
 ARG OS_VERSION
 ARG ELIXIR
@@ -148,11 +148,11 @@ LABEL ${ORG}.image.keywords="elixir, erlang, otp, programming language"
 LABEL ${ORG}.image.type="opensource"
 LABEL ${ORG}.image.name="elixir"
 
-COPY --from=elixir_build /ELIXIR_LOCAL/usr/local /usr/local
+COPY --from=debian_elixir_build /ELIXIR_LOCAL/usr/local /usr/local
 
 #######################################
 # build application
-FROM elixir AS app_build
+FROM debian_elixir AS debian_app_build
 
 # show versions
 RUN erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().'  -noshell
@@ -207,7 +207,7 @@ RUN mix release
 #######################################
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
-FROM debian:${OS_VERSION} AS app
+FROM debian:${OS_VERSION} AS debian_app
 
 ARG ORG
 ARG OS_VERSION
@@ -231,20 +231,21 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 WORKDIR /app
-RUN chown nobody:nobody /app
+RUN groupadd -f nobody \
+  && chown nobody:nobody /app
 
 # set runner ENV
 ENV MIX_ENV="prod"
 
 # Only copy the final release from the build stage
-COPY --from=app_build --chown=nobody:nobody /app/_build/${MIX_ENV}/rel/${APP} ./
+COPY --from=debian_app_build --chown=nobody:nobody /app/_build/${MIX_ENV}/rel/${APP} ./
 
 USER nobody
 
 CMD ["/app/bin/server"]
 
 #######################################
-FROM app_build as scratch_build
+FROM debian_app_build as debian_scratch_build
 
 # install scratch build dependencies
 RUN apt-get update -y && \
@@ -277,7 +278,7 @@ RUN for fat in $(file _build/*/rel/*/erts-*/bin/*|grep "not stripped"|awk '{prin
     cp /bin/sh ${RELEASE}/bin
     
 #######################################
-FROM scratch AS scratch_app
+FROM scratch AS debian_scratch_app
 
 ARG ORG
 ARG APP
@@ -323,4 +324,4 @@ ENTRYPOINT [\
   "--no-halt" \
 ]
 
-COPY --from=scratch_build /app/_build/${MIX_ENV}/rel/${APP}/ /
+COPY --from=debian_scratch_build /app/_build/${MIX_ENV}/rel/${APP}/ /

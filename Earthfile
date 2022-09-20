@@ -1,30 +1,14 @@
 VERSION 0.6
 
+# TODO: figure out "automated" tagging...
 # curl -s 'https://registry.hub.docker.com/v2/repositories/hexpm/elixir/tags/' | jq '."results"[]["name"]'
 
 all:
     ARG TAG
-    ARG BRANCH
     BUILD +test
-    BUILD +get-tag-from-branch --BUILD=+build --TAG=${TAG} --BRANCH=${BRANCH}
-    
-get-tag-from-branch:
-    ARG BUILD
-    ARG BRANCH
-    ARG TAG
-    FROM debian:latest
-    IF [ -z "${TAG}" ]
-        IF [ "${BRANCH}" == "main" ] || [ "${BRANCH}" == "master" ]
-            ARG IMAGE_TAG=latest
-        ELSE
-            ARG IMAGE_TAG=${BRANCH}
-        END
-    ELSE
-        ARG IMAGE_TAG=${TAG}
-    END
-    BUILD ${BUILD} --TAG=${IMAGE_TAG}
+    BUILD +release --TAG=${TAG}
 
-# TODO: vulnerability scan(s) + sbom
+# TODO: vulnerability scan(s)
 test-slow:
     BUILD +test
     BUILD +sec-advisories
@@ -40,69 +24,200 @@ test:
     BUILD +audit-deps
     BUILD +audit-web
     BUILD +lint-dockerfiles
+    BUILD +cyclonedx-sbom
     
-build:
+release:
     ARG TAG
-    # BUILD +build-glibc --TAG=${TAG}
-    BUILD +build-musl --TAG=${TAG}
+    BUILD +release-glibc --TAG=${TAG}
+    BUILD +release-musl --TAG=${TAG}
+    BUILD +release-cent
     
-# TODO: fix rel/docker/debian.dockerfile
-build-glibc:
-    ARG DEBIAN
-    ARG TAG
+# TODO: complete the centos release
+release-cent:
     ARG APP
     ARG APP_VERSION
-    FROM +build-image \
-        --TARGET=app_build \
-        --DOCKERFILE='./rel/docker/debian.dockerfile' \
-        --OS_VERSION=${DEBIAN}
-    SAVE ARTIFACT _build/${MIX_ENV}/rel/${APP} /release AS LOCAL _build/${MIX_ENV}/rel/glibc/${APP}
-    SAVE ARTIFACT _build/${MIX_ENV}/${APP}-${APP_VERSION}.tar.gz /release-tar AS LOCAL _build/${MIX_ENV}/${APP}-${APP_VERSION}-glibc.tar.gz
-    BUILD +save-image \
-        --TARGET=app \
-        --DOCKERFILE='./rel/docker/debian.dockerfile' \
-        --OS_VERSION=${DEBIAN} \
-        --TAG="${TAG}-debian-${DEBIAN}"
-    BUILD +save-image \
-        --TARGET=scratch_app \
-        --DOCKERFILE='./rel/docker/debian.dockerfile' \
-        --OS_VERSION=${DEBIAN} \
-        --TAG="${TAG}-glib-scratch"
-
-build-musl:
-    ARG ALPINE
-    ARG TAG
+    ARG CENTOS
+    BUILD +save-cent-release \
+        --APP=${APP} \
+        --APP_VERSION=${APP_VERSION} \
+        --DEBIAN=${DEBIAN}
+    
+save-cent-release:
     ARG APP
     ARG APP_VERSION
-    FROM +build-image \
-        --DOCKERFILE="./rel/docker/alpine.dockerfile" \
-        --TARGET=app_build \
-        --OS_VERSION=${ALPINE}
-    SAVE ARTIFACT _build/${MIX_ENV}/rel/${APP} /release AS LOCAL _build/${MIX_ENV}/rel/musl/${APP}
-    SAVE ARTIFACT _build/${MIX_ENV}/${APP}-${APP_VERSION}.tar.gz /release-tar AS LOCAL _build/${MIX_ENV}/${APP}-${APP_VERSION}-musl.tar.gz
-    BUILD +save-image \
-        --DOCKERFILE="./rel/docker/alpine.dockerfile" \
-        --TARGET=app \
-        --OS_VERSION=${ALPINE} \
-        --TAG="${TAG}-alpine-${ALPINE}"
-    BUILD +save-image \
-        --DOCKERFILE="./rel/docker/alpine.dockerfile" \
-        --TARGET=scratch_app \
-        --OS_VERSION=${ALPINE} \
-        --TAG="${TAG}-musl-scratch"
+    ARG CENTOS
+    FROM +build-cent \
+        --CENTOS=${CENTOS} \
+        --TARGET=centos_app_build
+    SAVE ARTIFACT _build/${MIX_ENV}/rel/${APP} /release AS LOCAL _build/${MIX_ENV}/rel/cent/${APP}
+    SAVE ARTIFACT _build/${MIX_ENV}/${APP}-${APP_VERSION}.tar.gz /release-tar AS LOCAL _build/${MIX_ENV}/${APP}-${APP_VERSION}-cent.tar.gz
 
-save-image:
-    ARG DOCKERFILE
+save-cent:
+    ARG CENTOS
     ARG TARGET
-    ARG OS_VERSION
-    FROM +build-image \
-        --DOCKERFILE=${DOCKERFILE} \
-        --TARGET=${TARGET} \
-        --OS_VERSION=${OS_VERSION}
+    FROM +build-cent \
+        --CENTOS=${CENTOS} \
+        --TARGET=${TARGET}
     ARG ORG
     ARG IMAGE
     ARG TAG
     SAVE IMAGE --push ${ORG}/${IMAGE}:${TAG}
+    
+# NOTE: not sure about these parameters...I just copied them from the Debian build...
+build-cent:
+    ARG CENTOS
+    ARG TARGET
+    FROM +build-image \
+        --DOCKERFILE="./rel/docker/centos.dockerfile" \
+        --CONTEXT="." \
+        --OS_VERSION=${CENTOS} \
+        --CFLAGS="-g -O2 -fstack-protector -fstack-clash-protection ${CF_PROTECTION} ${PIE_CFLAGS}" \
+        --CPPFLAGS="-D_FORTIFY_SOURCE=2" \
+        --LDFLAGS="-Wl,-z,relro,-z,now ${PIE_LDFLAGS}" \
+        --CONFIGURE_OPTS='--with-ssl --enable-dirty-schedulers' \
+        --TARGET=${TARGET}
+
+release-glibc:
+    ARG APP
+    ARG APP_VERSION
+    ARG ERLANG
+    ARG ELIXIR
+    ARG DEBIAN
+    ARG ORG
+    ARG IMAGE
+    ARG TAG
+    BUILD +save-glibc-release \
+        --APP=${APP} \
+        --APP_VERSION=${APP_VERSION} \
+        --DEBIAN=${DEBIAN}
+    BUILD +save-glibc \
+        --DEBIAN=${DEBIAN} \
+        --TARGET=debian_erlang \
+        --ORG=${ORG} \
+        --IMAGE=erlang \
+        --TAG=${ERLANG}-debian-${DEBIAN}
+    BUILD +save-glibc \
+        --DEBIAN=${DEBIAN} \
+        --TARGET=debian_elixir \
+        --ORG=${ORG} \
+        --IMAGE=elixir \
+        --TAG=${ELIXIR}-erlang-${ERLANG}-debian-${DEBIAN}
+    BUILD +save-glibc \
+        --DEBIAN=${DEBIAN} \
+        --TARGET=debian_app \
+        --ORG=${ORG} \
+        --IMAGE=${IMAGE} \
+        --TAG=${TAG}-debian-${DEBIAN}
+    BUILD +save-glibc \
+        --DEBIAN=${DEBIAN} \
+        --TARGET=debian_scratch_app \
+        --ORG=${ORG} \
+        --IMAGE=${IMAGE} \
+        --TAG=${TAG}-glibc-scratch
+
+save-glibc-release:
+    ARG APP
+    ARG APP_VERSION
+    ARG DEBIAN
+    FROM +build-glibc \
+        --DEBIAN=${DEBIAN} \
+        --TARGET=debian_app_build
+    SAVE ARTIFACT _build/${MIX_ENV}/rel/${APP} /release AS LOCAL _build/${MIX_ENV}/rel/glibc/${APP}
+    SAVE ARTIFACT _build/${MIX_ENV}/${APP}-${APP_VERSION}.tar.gz /release-tar AS LOCAL _build/${MIX_ENV}/${APP}-${APP_VERSION}-glibc.tar.gz
+
+save-glibc:
+    ARG DEBIAN
+    ARG TARGET
+    FROM +build-glibc \
+        --DEBIAN=${DEBIAN} \
+        --TARGET=${TARGET}
+    ARG ORG
+    ARG IMAGE
+    ARG TAG
+    SAVE IMAGE --push ${ORG}/${IMAGE}:${TAG}
+
+build-glibc:
+    ARG DEBIAN
+    ARG TARGET
+    FROM +build-image \
+        --DOCKERFILE="./rel/docker/debian.dockerfile" \
+        --CONTEXT="." \
+        --OS_VERSION=${DEBIAN} \
+        --CFLAGS="-g -O2 -fstack-protector -fstack-clash-protection ${CF_PROTECTION} ${PIE_CFLAGS}" \
+        --CPPFLAGS="-D_FORTIFY_SOURCE=2" \
+        --LDFLAGS="-Wl,-z,relro,-z,now ${PIE_LDFLAGS}" \
+        --CONFIGURE_OPTS='--with-ssl --enable-dirty-schedulers' \
+        --TARGET=${TARGET}
+       
+release-musl:
+    ARG APP
+    ARG APP_VERSION
+    ARG ERLANG
+    ARG ELIXIR
+    ARG ALPINE
+    ARG ORG
+    ARG IMAGE
+    ARG TAG
+    BUILD +save-musl-release \
+        --APP=${APP} \
+        --APP_VERSION=${APP_VERSION} \
+        --ALPINE=${ALPINE}
+    BUILD +save-musl \
+        --ALPINE=${ALPINE} \
+        --TARGET=alpine_erlang \
+        --ORG=${ORG} \
+        --IMAGE=erlang \
+        --TAG=${ERLANG}-alpine-${ALPINE}
+    BUILD +save-musl \
+        --ALPINE=${ALPINE} \
+        --TARGET=alpine_elixir \
+        --ORG=${ORG} \
+        --IMAGE=elixir \
+        --TAG=${ELIXIR}-erlang-${ERLANG}-alpine-${ALPINE}
+    BUILD +save-musl \
+        --ALPINE=${ALPINE} \
+        --TARGET=alpine_app \
+        --ORG=${ORG} \
+        --IMAGE=${IMAGE} \
+        --TAG=${TAG}-alpine-${ALPINE}
+    BUILD +save-musl \
+        --ALPINE=${ALPINE} \
+        --TARGET=alpine_scratch_app \
+        --ORG=${ORG} \
+        --IMAGE=${IMAGE} \
+        --TAG=${TAG}-musl-scratch
+    
+save-musl-release:
+    ARG APP
+    ARG APP_VERSION
+    ARG ALPINE
+    FROM +build-musl \
+        --ALPINE=${ALPINE} \
+        --TARGET=alpine_app_build
+    SAVE ARTIFACT _build/${MIX_ENV}/rel/${APP} /release AS LOCAL _build/${MIX_ENV}/rel/musl/${APP}
+    SAVE ARTIFACT _build/${MIX_ENV}/${APP}-${APP_VERSION}.tar.gz /release-tar AS LOCAL _build/${MIX_ENV}/${APP}-${APP_VERSION}-musl.tar.gz
+
+save-musl:
+    ARG ALPINE
+    ARG TARGET
+    FROM +build-musl \
+        --ALPINE=${ALPINE} \
+        --TARGET=${TARGET}
+    ARG ORG
+    ARG IMAGE
+    ARG TAG
+    SAVE IMAGE --push ${ORG}/${IMAGE}:${TAG}
+
+build-musl:
+    ARG ALPINE
+    ARG TARGET
+    FROM +build-image \
+        --DOCKERFILE="./rel/docker/alpine.dockerfile" \
+        --CONTEXT="." \
+        --OS_VERSION=${ALPINE} \
+        --CFLAGS="-g -O2 -fstack-clash-protection ${CF_PROTECTION} ${PIE_CFLAGS}" \
+        --CONFIGURE_OPTS='--without-javac --without-wx --without-debugger --without-observer --without-jinterface --without-cosEvent --without-cosEventDomain --without-cosFileTransfer --without-cosNotification --without-cosProperty --without-cosTime --without-cosTransactions --without-et --without-gs --without-ic --without-megaco --without-orber --without-percept --without-typer --with-ssl --enable-threads --enable-dirty-schedulers --disable-hipe' \
+        --TARGET=${TARGET}
 
 build-image:
     ARG DOCKERFILE="./rel/docker/alpine.dockerfile"
@@ -180,6 +295,7 @@ build-image:
 
 lint-dockerfiles:
     BUILD +lint-dockerfile --DOCKER_FILE=alpine.dockerfile --DOCKER_PATH=rel/docker
+    # BUILD +lint-dockerfile --DOCKER_FILE=centos.dockerfile --DOCKER_PATH=rel/docker
     BUILD +lint-dockerfile --DOCKER_FILE=debian.dockerfile --DOCKER_PATH=rel/docker
     BUILD +lint-dockerfile --DOCKER_FILE=dev.dockerfile --DOCKER_PATH=.devcontainer
 
@@ -258,12 +374,28 @@ pest-cache:
     RUN ./deps/pest/pest.erl -U crypto
     SAVE ARTIFACT ./deps/pest/priv/pest.dat /cache/${ELIXIR}/${ERLANG} AS LOCAL ./priv/pest/pest.dat
 
+cyclonedx-sbom:
+    ARG ELIXIR
+    ARG ERLANG
+    ARG EXPORT_SBOM=false
+    FROM +test-base-compiled --ELIXIR=${ELIXIR} --ERLANG=${ERLANG}
+    RUN mix archive.install hex sbom --force
+    RUN mix sbom.cyclonedx -o sbom.xml
+    IF [ "${EXPORT_SBOM}" == "true" ]
+        SAVE ARTIFACT sbom.xml /sbom AS LOCAL sbom.xml
+    ELSE
+        SAVE ARTIFACT sbom.xml /sbom
+    END
+
 audit-web:
     ARG ELIXIR
     ARG ERLANG
+    ARG PHOENIX_APP
     FROM +test-base-compiled --ELIXIR=${ELIXIR} --ERLANG=${ERLANG}
-    RUN mix escript.install --force hex sobelow
-    RUN --no-cache ${MIX_HOME}/escripts/sobelow --exit=Low
+    IF [ "${PHOENIX_APP}" == "true" ]
+        RUN mix escript.install --force hex sobelow
+        RUN --no-cache ${MIX_HOME}/escripts/sobelow --exit=Low
+    END
 
 audit-deps:
     ARG ELIXIR
@@ -333,8 +465,11 @@ test-base-with-assets:
     ARG ELIXIR
     ARG ERLANG
     FROM +test-base-compiled-deps --ELIXIR=${ELIXIR} --ERLANG=${ERLANG}
-    COPY --if-exists --dir priv assets ./
-    RUN mix assets.deploy
+    ARG PHOENIX_APP
+    IF [ "${PHOENIX_APP}" == "true" ]
+        COPY --if-exists --dir priv assets ./
+        RUN mix assets.deploy
+    END
 
 test-base-compiled-deps:
     ARG ELIXIR
@@ -361,65 +496,3 @@ test-base:
     ENV MIX_HOME=/root/.mix
     RUN mix do local.hex --force, local.rebar --force
     WORKDIR /app
-    
-# load-otp-env:
-#     FROM debian:latest
-#     RUN apt-get update -y && \
-#         apt-get -y --no-install-recommends install pcregrep
-#     COPY --if-exists .env .
-#     COPY .tool-versions .
-#     IF [ ! -f .env ] || [ ! grep -Ei ERLANG=[0-9.-rc]+ .env >/dev/null 2>&1 ]
-#         RUN echo "ERLANG="$(cat .tool-versions | pcregrep -i -o1 'erlang\s+([0-9.]+(-rc[0-9]+)?)') >> .env
-#     END
-#     IF [ ! grep -Ei ELIXIR=[0-9.-rc]+ .env >/dev/null 2>&1 ]
-#         RUN echo "ELIXIR="$(cat .tool-versions | pcregrep -i -o1 'elixir\s+([0-9.]+(-rc[0-9.]+)?)(-otp-[0-9]+)?') >> .env
-#     END
-#     SAVE ARTIFACT .env AS LOCAL .env
-    
-# load-app-env:
-#     ARG ELIXIR
-#     ARG ERLANG
-#     FROM +test-base-compiled --ELIXIR=${ELIXIR} --ERLANG=${ERLANG}
-#     RUN apk --update --upgrade add --no-cache pcre-tools
-#     COPY --if-exists .env .
-#     IF [ ! -f .env ] || [ ! grep -Ei APP=.+ .env >/dev/null 2>&1 ]
-#         RUN echo "APP="$(mix app.name) >> .env
-#     END
-#     IF [ ! grep -Ei APP_VERSION=[0-9.-rc]+ .env >/dev/null 2>&1 ]
-#         RUN echo "APP_VERSION="$(mix app.version) >> .env
-#     END
-#     SAVE ARTIFACT .env AS LOCAL .env
-
-# build-tag:
-#     FROM debian:latest
-#     ARG BUMP  # major, minor, patch, pre, release
-#     ARG PRE=rc
-#     ARG VERSION
-#     ARG INCLUDE_BUILD=""  # date,elixir,erlang,arch,loader,os
-#     # ^ if empty -> don't include build
-#     # pull from git -> $(git describe --abbrev=0 --tags 2>/dev/null)
-#     # defaults
-#     #   major -> 1
-#     #   minor -> 0
-#     #   patch -> 0
-#     #   pre -> nil
-#     #   build -> date.elixir.version.erlang.version.arch.loader.version[.os.version]
-#     #            e.g. 1.0.0-rc.0+20220909T194013Z_x86_64_musl-1.2.3_alpine-3.16.1
-#     #     -> DateTime.utc_now() |> Map.put(:microsecond, {0, 0}) |> DateTime.to_iso8601() |> String.replace(["-", ":"], "")
-#     #     -> cat /etc/apk/arch
-#     #        lscpu | grep Arch | rev | cut -d" " -f1 | rev
-#     #     -> apk info -w musl 2>/dev/null | grep -Ei 'musl-.* webpage' | cut -d" " -f1 | cut -d- -f2-
-#     #        apt show libc-bin 2>/dev/null | grep -i version | cut -d" " -f2
-#     #     -> cat /etc/os-release | grep ID=alpine >/dev/null 2>&1
-#     #        cat /etc/os-release | grep VERSION_ID= | cut -d= -f2
-#     #        cat /etc/os-release | grep ID=debian >/dev/null 2>&1
-#     #        cat /etc/debian_version
-#     # iex> Version.parse!(app_version)
-    
-# tag:
-#     FROM debian:latest
-#     # check if current hash already has a tag
-#     # GIT_COMMIT=`git rev-parse HEAD`
-#     # NEEDS_TAG=`git describe --contains $GIT_COMMIT 2>/dev/null`
-#     # git tag ${TAG}
-#     # RUN --push git push --tags

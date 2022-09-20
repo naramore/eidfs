@@ -1,7 +1,7 @@
 ARG OS_VERSION
 
 # build erlang otp from source
-FROM alpine:${OS_VERSION} AS erlang_build
+FROM alpine:${OS_VERSION} AS alpine_erlang_build
 
 ARG ERLANG
 
@@ -81,7 +81,7 @@ RUN scanelf --nobanner -E ET_DYN -BF '%F' --recursive /usr/local | xargs -r stri
 
 #######################################
 # minimal erlang distribution
-FROM alpine:${OS_VERSION} AS erlang
+FROM alpine:${OS_VERSION} AS alpine_erlang
 
 ARG OS_VERSION
 ARG ERLANG
@@ -106,11 +106,11 @@ RUN apk add --update --no-cache \
   lksctp-tools
 
 # copy erlang installation from build
-COPY --from=erlang_build /usr/local /usr/local
+COPY --from=alpine_erlang_build /usr/local /usr/local
 
 #######################################
 # build elixir from source
-FROM alpine:${OS_VERSION} AS elixir_build
+FROM alpine:${OS_VERSION} AS alpine_elixir_build
 
 ARG ELIXIR
 ARG ERLANG_MAJOR
@@ -128,7 +128,7 @@ RUN make -o compile DESTDIR=/ELIXIR_LOCAL install
 
 #######################################
 # minimal elixir distribution
-FROM erlang AS elixir
+FROM alpine_erlang AS alpine_elixir
 
 ARG OS_VERSION
 ARG ELIXIR
@@ -145,11 +145,11 @@ LABEL ${ORG}.image.keywords="elixir, erlang, otp, programming language"
 LABEL ${ORG}.image.type="opensource"
 LABEL ${ORG}.image.name="elixir"
 
-COPY --from=elixir_build /ELIXIR_LOCAL/usr/local /usr/local
+COPY --from=alpine_elixir_build /ELIXIR_LOCAL/usr/local /usr/local
 
 #######################################
 # build application
-FROM elixir AS app_build
+FROM alpine_elixir AS alpine_app_build
 
 # show versions
 RUN erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().'  -noshell
@@ -204,7 +204,7 @@ RUN mix release
 #######################################
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
-FROM alpine:${OS_VERSION} AS app
+FROM alpine:${OS_VERSION} AS alpine_app
 
 ARG ORG
 ARG OS_VERSION
@@ -231,14 +231,14 @@ RUN chown nobody:nobody /app
 ENV MIX_ENV="prod"
 
 # Only copy the final release from the build stage
-COPY --from=app_build --chown=nobody:nobody /app/_build/${MIX_ENV}/rel/${APP} ./
+COPY --from=alpine_app_build --chown=nobody:nobody /app/_build/${MIX_ENV}/rel/${APP} ./
 
 USER nobody
 
 CMD ["/app/bin/server"]
 
 #######################################
-FROM app_build as scratch_build
+FROM alpine_app_build as alpine_scratch_build
 
 # install scratch build dependencies
 RUN apk --update --upgrade add --no-cache \
@@ -271,7 +271,7 @@ RUN for fat in $(file _build/*/rel/*/erts-*/bin/*|grep "not stripped"|awk '{prin
     cp /bin/sh ${RELEASE}/bin
 
 #######################################
-FROM scratch AS scratch_app
+FROM scratch AS alpine_scratch_app
 
 ARG ORG
 ARG APP
@@ -317,4 +317,4 @@ ENTRYPOINT [\
   "--no-halt" \
 ]
 
-COPY --from=scratch_build /app/_build/${MIX_ENV}/rel/${APP}/ /
+COPY --from=alpine_scratch_build /app/_build/${MIX_ENV}/rel/${APP}/ /

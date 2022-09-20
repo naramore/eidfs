@@ -11,7 +11,7 @@ services:
         ELIXIR: 1.13.4
         ERLANG: 24.3.4.2
         ERLANG_MAJOR: 24
-        ORG: docker.io
+        ORG: local
         APP: eidfs
         APP_VERSION: 0.1.0
         ERTS_VSN: 12.3.2.2
@@ -32,7 +32,7 @@ services:
         ELIXIR: 1.13.4
         ERLANG: 24.3.4.2
         ERLANG_MAJOR: 24
-        ORG: docker.io
+        ORG: local
         APP: eidfs
         APP_VERSION: 0.1.0
         ERTS_VSN: 12.3.2.2
