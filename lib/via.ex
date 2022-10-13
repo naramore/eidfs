@@ -915,6 +915,18 @@ defmodule Via.PlannerV2 do
     def decrease_depth?(_, _, _), do: false
 
     def print_stuff(where, type, cont, data, graph, acc)
+    def print_stuff(:pre_depth_inc, {:pre, :attrs}, _, _, _, _) do
+      :ok
+    end
+    def print_stuff(:post_depth_inc, {:pre, :attrs}, _, _, _, _) do
+      :ok
+    end
+    def print_stuff(:pre_depth_dec, {:post, :attrs}, _, _, _, _) do
+      :ok
+    end
+    def print_stuff(:post_depth_dec, {:post, :attrs}, _, _, _, _) do
+      :ok
+    end
     def print_stuff(:pre_depth_inc, {:pre, :attr}, _, attr, _, a) do
       if is_list(attr) do
         :ok
@@ -927,18 +939,6 @@ defmodule Via.PlannerV2 do
         _ -> :ok
       end
     end
-    def print_stuff(:pre_depth_dec, {:pre, :attr}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:post_depth_dec, {:pre, :attr}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:pre_depth_inc, {:post, :attr}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:post_depth_inc, {:post, :attr}, _, _, _, _) do
-      :ok
-    end
     def print_stuff(:pre_depth_dec, {:post, :attr}, cont, attr, _, a) do
       case cont do
         {:halt, :cycle} ->
@@ -950,24 +950,24 @@ defmodule Via.PlannerV2 do
     def print_stuff(:post_depth_dec, {:post, :attr}, _, _, _, _) do
       :ok
     end
+    def print_stuff(:pre_depth_inc, {:pre, :edges}, _, _, _, _) do
+      :ok
+    end
+    def print_stuff(:post_depth_inc, {:pre, :edges}, _, _, _, _) do
+      :ok
+    end
+    def print_stuff(:pre_depth_dec, {:post, :edges}, _, _, _, _) do
+      :ok
+    end
+    def print_stuff(:post_depth_dec, {:post, :edges}, _, _, _, _) do
+      :ok
+    end
     def print_stuff(:pre_depth_inc, {:pre, :edge}, _, {_, i, _, _}, _, a) do
       snapshot(a, "Add nodes for input path #{inspect(to_shape(i))}")
     end
     def print_stuff(:post_depth_inc, {:pre, :edge}, _, {_, i, o, _}, _, a) do
       _ = snapshot(a, "Computing #{inspect(o)} dependencies #{inspect(to_shape(i))}")
       snapshot(a, "Processing dependency #{inspect(to_shape(i))}")
-    end
-    def print_stuff(:pre_depth_dec, {:pre, :edge}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:post_depth_dec, {:pre, :edge}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:pre_depth_inc, {:post, :edge}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:post_depth_inc, {:post, :edge}, _, _, _, _) do
-      :ok
     end
     def print_stuff(:pre_depth_dec, {:post, :edge}, cont, {_, i, _, _}, _, a) do
       case cont do
