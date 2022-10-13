@@ -178,16 +178,10 @@ defmodule Via.Graph do
   @type edge :: {term(), attr(), attr(), map()}
   @type acc :: term()
   @type continuation :: :cont | {:halt, reason :: term()} | :done
-  @type type :: {:pre | :post, :ast | :attr | :edge}
+  @type type :: {:pre | :post, :ast | :attr | :edge | :attrs | :edges}
 
   @callback next_edges(attr(), t(), acc()) :: {[edge()], t(), acc}
   @callback visit(type(), continuation(), term(), t(), acc()) :: {continuation(), t(), acc()}
-  # @callback pre_visit_attr(attr(), t(), acc()) :: {continuation(), t(), acc()}
-  # @callback post_visit_attr(continuation(), attr(), t(), acc(), acc()) :: {continuation(), t(), acc()}
-  # @callback pre_visit_edge(edge(), t(), acc()) :: {continuation(), t(), acc()}
-  # @callback post_visit_edge(continuation(), edge(), t(), acc(), acc()) :: {continuation(), t(), acc()}
-  # @callback pre_visit_ast(Via.ast(), t(), acc()) :: {continuation(), t(), acc()}
-  # @callback post_visit_ast(continuation(), Via.ast(), t(), acc(), acc()) :: {continuation(), t(), acc()}
 
   @spec new(Keyword.t()) :: t()
   def new(opts \\ []) do
@@ -295,17 +289,29 @@ defmodule Via.Graph do
 
   @spec walk_attr(module, attr() | [attr()], t(), acc()) :: {continuation(), t(), acc()}
   def walk_attr(module, attr_or_attrs, graph, acc)
-  def walk_attr(module, attrs, graph, acc) when is_list(attrs) do
-    case module.visit({:pre, :attr}, :cont, attrs, graph, acc) do
+  def walk_attr(module, [], graph, acc) do
+    case module.visit({:pre, :attr}, :cont, [], graph, acc) do
       {:done, graph, new_acc} ->
-        module.visit({:post, :attr}, :done, attrs, graph, new_acc)
+        module.visit({:post, :attr}, :done, [], graph, new_acc)
 
       {{:halt, reason}, graph, new_acc} ->
-        module.visit({:post, :attr}, {:halt, reason}, attrs, graph, new_acc)
+        module.visit({:post, :attr}, {:halt, reason}, [], graph, new_acc)
+
+      {:cont, graph, new_acc} ->
+        module.visit({:post, :attr}, :done, [], graph, new_acc)
+    end
+  end
+  def walk_attr(module, attrs, graph, acc) when is_list(attrs) do
+    case module.visit({:pre, :attrs}, :cont, attrs, graph, acc) do
+      {:done, graph, new_acc} ->
+        module.visit({:post, :attrs}, :done, attrs, graph, new_acc)
+
+      {{:halt, reason}, graph, new_acc} ->
+        module.visit({:post, :attrs}, {:halt, reason}, attrs, graph, new_acc)
 
       {:cont, graph, new_acc} ->
         {cont, graph, new_acc} =
-          Enum.reduce_while(attrs, {:cont, graph, new_acc}, fn attr, {_, g, a} ->
+          Enum.reduce_while(attrs, {:done, graph, new_acc}, fn attr, {_, g, a} ->
             case walk_attr(module, attr, g, a) do
               {:done, g, a} ->
                 {:cont, {:done, g, a}}
@@ -313,7 +319,7 @@ defmodule Via.Graph do
                 {:halt, {{:halt, r}, g, a}}
             end
           end)
-        module.visit({:post, :attr}, cont, attrs, graph, new_acc)
+        module.visit({:post, :attrs}, cont, attrs, graph, new_acc)
     end
   end
   def walk_attr(module, attr, graph, acc) do
@@ -327,26 +333,17 @@ defmodule Via.Graph do
       {cont, graph, new_acc} ->
         cond do
           unreachable?(graph, attr) or match?({:halt, :unreachable}, cont) ->
-            # FIXME: updating unreachable should happen AFTER post_visit
-            graph = Map.update!(graph, :unreachable, &MapSet.put(&1, attr))
-            module.visit({:post, :attr}, {:halt, :unreachable}, attr, graph, new_acc)
+            {c, g, a} = module.visit({:post, :attr}, {:halt, :unreachable}, attr, graph, new_acc)
+            {c, Map.update!(g, :unreachable, &MapSet.put(&1, attr)), a}
 
           attr in Map.get(graph, :attr_trail, []) or match?({:halt, :cyclic}, cont) ->
-            # FIXME: updating unreachable should happen AFTER post_visit
-            graph = Map.update!(graph, :unreachable, &MapSet.put(&1, attr))
-            module.visit({:post, :attr}, {:halt, :cyclic}, attr, graph, new_acc)
+            {c, g, a} = module.visit({:post, :attr}, {:halt, :cyclic}, attr, graph, new_acc)
+            {c, Map.update!(g, :unreachable, &MapSet.put(&1, attr)), a}
 
           true ->
             {next_edges, graph, new_acc} = module.next_edges(attr, graph, new_acc)
-            {cont, graph, new_acc} =
-              Enum.reduce(next_edges, {{:halt, :unreachable}, graph, new_acc}, fn edge, {c, g, a} ->
-                case walk_edge(module, edge, g, a) do
-                  {{:halt, _}, g, a} -> {c, g, a}
-                  cga -> cga
-                end
-              end)
-            # FIXME: updating unreachable should happen AFTER post_visit
-            module.visit({:post, :attr}, cont, attr, graph, new_acc)
+            walk_edges(module, next_edges, graph, new_acc)
+            |> then(fn {c, g, a} -> module.visit({:post, :attr}, c, attr, g, a) end)
         end
     end
   end
@@ -357,6 +354,25 @@ defmodule Via.Graph do
   end
   defp unreachable?(graph, attr) do
     attr in graph.unreachable
+  end
+
+  @spec walk_edges(module(), [edge()], t(), acc()) :: {continuation(), t(), acc()}
+  def walk_edges(module, edges, graph, acc) do
+    case module.visit({:pre, :edges}, :cont, edges, graph, acc) do
+      {:cont, g, a} ->
+        Enum.reduce(edges, {{:halt, :unreachable}, g, a}, fn edge, {c, g, a} ->
+          case walk_edge(module, edge, g, a) do
+            {{:halt, _}, g, a} -> {c, g, a}
+            cga -> cga
+          end
+        end)
+
+      otherwise ->
+        otherwise
+    end
+    |> then(fn {c, g, a} ->
+      module.visit({:post, :edges}, c, edges, g, a)
+    end)
   end
 
   @spec walk_edge(module, edge(), t(), acc()) :: {continuation(), t(), acc()}
