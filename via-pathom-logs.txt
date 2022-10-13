@@ -1,0 +1,1782 @@
+Process attribute :p                            # <= pre_visit_attr(:p, _, _)
+Add nodes for input path {:m {}}                # <= pre_visit_edge(_, _, _)
+- Computing :p dependencies for {:m {}}         # ...
+- Processing dependency {:m {}}                 # ...
+- Process attribute :m                          # <= pre_visit_attr(:m, _, _)
+- Add nodes for input path {:l {}}              # <= pre_visit_edge(_, _, _)
+-- Computing :m dependencies {:l {}}            # ...
+-- Processing depencency {:l {}}                # ...
+-- Process attribute :l                         # <= pre_visit_attr(:l, _, _)
+-- Add nodes for input path {:e {}}             # <= pre_visit_edge(_, _, _)
+--- Computing :l dependencies {:e {}}           #
+--- Processing dependency {:e {}}               #
+--- Process attribute :e                        # <= pre_visit_attr(:e, _, _)
+--- Add nodes for input path {:c {}}            # <= pre_visit_edge(_, _, _)
+---- Computing :e dependencies {:c {}}          #
+---- Processing dependency {:c {}}              #
+---- Process attribute :c                       # <= pre_visit_attr(:c, _, _)
+---- Add nodes for input path {}                # <= pre_visit_edge(_, _, _)
+---- Complete computing deps {:c {}}            # <= post_visit_edge(:done, _, _, _)
+--- Chained deps                                #
+--- Complete computing deps {:e {}}             # <= post_visit_edge(:done, _, _, _)
+-- Chained deps                                 #
+-- Complete computing deps {:l {}}              # <= post_visit_edge(:done, _, _, _)
+- Chained deps                                  #
+- Complete computing deps {:m {}}               # <= post_visit_edge(:done, _, _, _)
+Chained deps                                    #
+Add nodes for input path {:o {}}
+- Computing :p dependencies for {:o {}}
+- Processing dependency {:o {}}
+- Process attribute :o
+- Add nodes for input path {:n {}}
+-- Computing :o dependencies for {:n {}}
+-- Processing dependency {:n {}}
+-- Process attribute :n
+-- Add nodes for input path {:l {}}
+--- Computing :n dependencies for {:l {}}
+--- Processing dependency {:l {}}
+--- Process attribute :l
+--- Add nodes for input path {:e {}}
+---- Computing :l dependencies for {:e {}}
+---- Processing dependency {:e {}}
+---- Process attribute :e
+---- Add nodes for input path {:c {}}
+----- Computing :e dependencies for {:c {}}
+----- Processing dependency {:c {}}
+----- Process attribute :c
+----- Add nodes for input path {}
+----- Complete computing deps {:c {}}
+---- Chained deps
+---- Complete computing deps {:e {}}
+--- Chained deps
+--- Complete computing deps {:l {}}
+-- Chained deps
+-- Complete computing deps {:n {}}
+- Chained deps
+- Add nodes for input path {:z {}}
+-- Computing :p dependencies for {:z {}}
+-- Processing dependency {:z {}}
+-- Process attribute :z
+-- Add nodes for input path {:y {}}
+--- Computing :z dependencies for {:y {}}
+--- Processing dependency {:y {}}
+--- Process attribute :y
+--- Add nodes for input path {:s {}}
+---- Computing :y dependencies for {:s {}}
+---- Processing dependency {:s {}}
+---- Process attribute :s
+---- Add nodes for input path {:r {}, :w {}}
+----- Computing :s dependencies for {:r {}, :w {}}
+----- Processing dependency {:r {}}
+----- Process attribute :r
+----- Add nodes for input path {:q {}}
+------ Computing :r dependencies for {:q {}}
+------ Processing dependency {:q {}}
+------ Process attribute :q
+------ Add nodes for input path {}
+------ Complete computing deps {:q {}}
+----- Chained deps
+----- Processing dependency {:w {}}
+----- Process attribute :w
+----- Add nodes for input path {:v {}}
+------ Computing :w dependencies for {:v {}}
+------ Processing dependency {:v {}}
+------ Process attribute :v
+------ Add nodes for input path {:t {}}
+------- Computing :v dependencies for {:t {}}
+------- Processing dependency {:t {}}
+------- Process attribute :t
+------- Add nodes for input path {}
+------- Complete computing deps {:t {}}
+------ Chained deps
+------ Add nodes for input path {:u {}}
+------- Computing :v dependencies for {:u {}}
+------- Processing dependency {:u {}}
+------- Process attribute :u
+------- Add nodes for input path {}
+------- Complete computing deps {:u {}}
+------ Chained deps
+------ Create root OR
+------ Complete computing deps {:v {}}
+----- Chained deps
+----- Create root AND
+----- Complete computing deps {:r {}, :w {}}
+---- Chained deps
+---- Complete computing deps {:s {}}
+--- Chained deps
+--- Add nodes for input path {:ac {}}
+---- Computing :y dependencies for {:ac {}}
+---- Processing dependency {:ac {}}
+---- Process attribute :ac
+---- Add nodes for input path {:ad {}}
+----- Computing :ac dependencies for {:ad {}}
+----- Processing dependency {:ad {}}
+----- Process attribute :ad
+----- Add nodes for input path {ae: {}}
+------ Computing :ad dependencies for {:ae {}}
+------ Processing dependency {:ae {}}
+------ Process attribute :ae
+------ Add nodes for input path {}
+------ Complete computing deps {:ae {}}
+----- Chained deps
+----- Complete computing deps {:ad {}}
+---- Chained deps
+---- Complete computing deps {:ac {}}
+--- Chained deps
+--- Create root OR
+--- Complete computing deps {:y {}}
+-- Chained deps
+-- Add nodes for input path {:ab {}}
+--- Computing :z dependencies for {:ab {}}
+--- Processing dependency {:ab {}}
+--- Process attribute :ab
+--- Add nodes for input path {:aa {}}
+---- Computing :ab dependencies for {:aa {}}
+---- Processing dependency {:aa {}}
+---- Mark path {:aa {}} as unreachable.
+---- Failed to compute dependencies {:aa {}}
+--- Add nodes for input path {:af {}}
+---- Computing :ab dependencies for {:af {}}
+---- Processing dependency {:af {}}
+---- Process attribute :af
+---- Add nodes for input path {:ae {}}
+----- Computing :af dependencies for {:ae {}}
+----- Processing dependency {:ae {}}
+----- Process attribute :ae
+----- Add nodes for input path {}
+----- Complete computing deps {:ae {}}
+---- Chained deps
+---- Complete computing deps {:af {}}
+--- Chained deps
+--- Add nodes for input path {:ad {}}
+---- Computing :ab dependencies for {:ad {}}
+---- Processing dependency {:ad {}}
+---- Process attribute :ad
+---- Add nodes for input path {:ae {}}
+----- Computing :ad dependencies for {:ae {}}
+----- Processing dependency {:ae {}}
+----- Process attribute :ae
+----- Add nodes for input path {}
+----- Complete computing deps {:ae {}}
+---- Chained deps
+---- Complete computing deps {:ad {}}
+--- Chained deps
+--- Create root OR
+--- Complete computing deps {:ab {}}
+-- Chained deps
+-- Create root OR
+-- Complete computing deps {:z {}}
+- Chained deps
+- Create root OR
+- Complete computing deps {:o {}}
+Chained deps
+Add nodes for input path {:k {}}
+- Computing :p dependencies for {:k {}}
+- Processing dependency {:k {}}
+- Process attribute :k
+- Add nodes for input path {:g {}}
+-- Computing :k dependencies for {:g {}}
+-- Processing dependency {:g {}}
+-- Process attribute :g
+-- Add nodes for input path {:h {}}
+--- Computing :g dependencies for {:h {}}
+--- Processing dependency {:h {}}
+--- Process attribute :h
+--- Add nodes for input path {:i {}}
+---- Computing :h dependencies for {:i {}}
+---- Processing dependency {:i {}}
+---- Process attribute :i
+---- Add nodes for input path {:j {}}
+----- Computing :i dependencies for {:j {}}
+----- Processing dependency {:j {}}
+----- Process attribute :j
+----- Add nodes for input path {:g {}}
+------ Computing :j dependencies for {:g {}}
+------ Processing dependency {:g {}}
+------ Attribute cycle detected for :g
+------ Failed to compute dependencies for {:g {}}
+----- Mark path {:j {}} as unreachable
+----- Failed to compute dependencies for {:j {}}
+---- Mark path {:i {}} as unreachable
+---- Failed to compute dependencies for {:i {}}
+--- Mark path {:h {}} as unreachable
+--- Failed to compute dependencies for {:h {}}
+-- Mark path {:g {}} as unreachable
+-- Failed to compute dependencies for {:g {}}
+- Add nodes for input path {:f {}}
+-- Computing :k dependencies for {:f {}}
+-- Processing dependency {:f {}}
+-- Process attribute :f
+-- Add nodes for input path {:b {}, :d {}}
+--- Computing :f dependencies for {:b {}, :d {}}
+--- Processing dependency {:b {}}
+--- Process attribute :b
+--- Add nodes for input path {:a {}}
+---- Computing :b dependencies for {:a {}}
+---- Processing dependency {:a {}}
+---- Mark path {:a {}} as unreachable
+---- Failed to compute dependencies {:a {}}
+--- Mark path {:b {}} as unreachable
+--- Failed to compute dependencies {:b {}, :d {}}
+-- Mark path {:f {}} as unreachable
+-- Failed to compute dependencies {:f {}}
+- Mark path {:k {}} as unreachable
+- Failed to compute dependencies {:k {}}
+Create root OR
+
+
+{
+  :b {{:a {}} #{r1}},
+  :c {{} #{s1}},
+  :d {{:c {}} #{r2}},
+  :e {{:c {}} #{r3}},
+  :f {{:b {}, :d {}} #{r15}},
+  :g {{:h {}} #{r11}},
+  :h {{:i {}} #{r12}},
+  :i {{:j {}} #{r13}},
+  :j {{:g {}} #{r14}},
+  :k {{:g {}} #{r10}
+      {:f {}} #{r32}},
+  :l {{:e {}} #{r4}},
+  :m {{:l {}} #{r5}},
+  :n {{:l {}} #{r6}},
+  :o {{:n {}} #{r7}
+      {:z {}} #{r23}},
+  :p {{:m {}} #{r8},
+      {:o {}} #{r9}
+      {:k {}} #{r33}},
+  :q {{} #{s2}},
+  :r {{:q {}} #{r16}},
+  :s {{:r {}, :w {}} #{r20}},
+  :t {{} #{s3}},
+  :u {{} #{s4}},
+  :v {{:t {}} #{r17}
+      {:u {}} #{r18}},
+  :w {{:v {}} #{r19}},
+  :y {{:s {}} #{r21}
+      {:ac {}} #{r26}},
+  :z {{:y {}} #{r22}
+      {:ab {}} #{r25}},
+  :ab {{:aa {}} #{r24}
+       {:af {}} #{r30}
+       {:ad {}} #{r31}},
+  :ac {{:ad {}} #{r27}},
+  :ad {{:ae {}} #{r28}},
+  :ae {{} #{s5}},
+  :af {{:ae {}} #{r29}}
+}
+
+
+{c, g, a} = Via.Example.test(); nil
+ginfo = Digraph.vertices(a.plan.graph) |> Enum.map(&{&1, Digraph.in_neighbours(a.plan.graph, &1.id), Digraph.out_neighbours(a.plan.graph, &1.id)})
+gginfo = Enum.group_by(ginfo,
+  fn
+    {_, [], []} -> :isolated
+    {_, _, []} -> :leaf
+    {_, [], _} -> :root
+    _ -> :otherwise
+  end,
+  fn
+    {v, [], []} -> v
+    {v, i, []} -> {v, i}
+    {v, [], o} -> {v, o}
+    {v, i, o} -> {v, i, o}
+  end
+)
+
+gginfo |> Map.get(:root) |> Enum.map(fn {%{id: id}, _} -> id end) |> Enum.map(&{Digraph.vertex(a.plan.graph, &1), Via.Example.vplan(a.plan.graph, &1)})
+
+
+
+
+
+%{
+  leaf: [
+    {%Digraph.Vertex{
+       id: [:"$v" | 0],
+       label: %{
+         expects: %{p: %{}},
+         input: %{m: %{}},
+         resolver: :r8,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 1],
+         label: %{
+           expects: %{m: %{}},
+           input: %{l: %{}},
+           resolver: :r5,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 4],
+       label: %{
+         expects: %{p: %{}},
+         input: %{o: %{}},
+         resolver: :r9,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 31],
+         label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 5],
+       label: %{
+         expects: %{o: %{}},
+         input: %{n: %{}},
+         resolver: :r7,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 31],
+         label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 9],
+       label: %{
+         expects: %{o: %{}},
+         input: %{z: %{}},
+         resolver: :r23,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 30],
+         label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 31],
+         label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 10],
+       label: %{
+         expects: %{z: %{}},
+         input: %{y: %{}},
+         resolver: :r22,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 30],
+         label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 11],
+       label: %{
+         expects: %{y: %{}},
+         input: %{s: %{}},
+         resolver: :r21,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 22],
+         label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 13],
+       label: %{
+         expects: %{r: %{}},
+         input: %{q: %{}},
+         resolver: :r16,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 18],
+         label: %{
+           branches: [[:"$v" | 14], [:"$v" | 13], [:"$v" | 14], [:"$v" | 13]],
+           type: :and
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 14],
+       label: %{
+         expects: %{w: %{}},
+         input: %{v: %{}},
+         resolver: :r19,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 17],
+         label: %{branches: [[:"$v" | 15], [:"$v" | 16]], type: :or}
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 18],
+         label: %{
+           branches: [[:"$v" | 14], [:"$v" | 13], [:"$v" | 14], [:"$v" | 13]],
+           type: :and
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 15],
+       label: %{
+         expects: %{v: %{}},
+         input: %{t: %{}},
+         resolver: :r17,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 17],
+         label: %{branches: [[:"$v" | 15], [:"$v" | 16]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 16],
+       label: %{
+         expects: %{v: %{}},
+         input: %{u: %{}},
+         resolver: :r18,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 17],
+         label: %{branches: [[:"$v" | 15], [:"$v" | 16]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 19],
+       label: %{
+         expects: %{y: %{}},
+         input: %{ac: %{}},
+         resolver: :r26,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 20],
+         label: %{
+           expects: %{ac: %{}},
+           input: %{ad: %{}},
+           resolver: :r27,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 22],
+         label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 23],
+       label: %{
+         expects: %{z: %{}},
+         input: %{ab: %{}},
+         resolver: :r25,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 29],
+         label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 30],
+         label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 25],
+       label: %{
+         expects: %{ab: %{}},
+         input: %{af: %{}},
+         resolver: :r30,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 29],
+         label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 27],
+       label: %{
+         expects: %{ab: %{}},
+         input: %{ad: %{}},
+         resolver: :r31,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 28],
+         label: %{
+           expects: %{ad: %{}},
+           input: %{ae: %{}},
+           resolver: :r28,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 29],
+         label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+       }
+     ]}
+  ],
+  otherwise: [
+    {%Digraph.Vertex{
+       id: [:"$v" | 1],
+       label: %{
+         expects: %{m: %{}},
+         input: %{l: %{}},
+         resolver: :r5,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 2],
+         label: %{
+           expects: %{l: %{}},
+           input: %{e: %{}},
+           resolver: :r4,
+           type: :resolver
+         }
+       }
+     ],
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 0],
+         label: %{
+           expects: %{p: %{}},
+           input: %{m: %{}},
+           resolver: :r8,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 2],
+       label: %{
+         expects: %{l: %{}},
+         input: %{e: %{}},
+         resolver: :r4,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 3],
+         label: %{
+           expects: %{e: %{}},
+           input: %{c: %{}},
+           resolver: :r3,
+           type: :resolver
+         }
+       }
+     ],
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 1],
+         label: %{
+           expects: %{m: %{}},
+           input: %{l: %{}},
+           resolver: :r5,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 6],
+       label: %{
+         expects: %{n: %{}},
+         input: %{l: %{}},
+         resolver: :r6,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 7],
+         label: %{
+           expects: %{l: %{}},
+           input: %{e: %{}},
+           resolver: :r4,
+           type: :resolver
+         }
+       }
+     ],
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 31],
+         label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 7],
+       label: %{
+         expects: %{l: %{}},
+         input: %{e: %{}},
+         resolver: :r4,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 8],
+         label: %{
+           expects: %{e: %{}},
+           input: %{c: %{}},
+           resolver: :r3,
+           type: :resolver
+         }
+       }
+     ],
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 6],
+         label: %{
+           expects: %{n: %{}},
+           input: %{l: %{}},
+           resolver: :r6,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 20],
+       label: %{
+         expects: %{ac: %{}},
+         input: %{ad: %{}},
+         resolver: :r27,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 21],
+         label: %{
+           expects: %{ad: %{}},
+           input: %{ae: %{}},
+           resolver: :r28,
+           type: :resolver
+         }
+       }
+     ],
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 19],
+         label: %{
+           expects: %{y: %{}},
+           input: %{ac: %{}},
+           resolver: :r26,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 22],
+       label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 12],
+         label: %{
+           expects: %{s: %{}},
+           input: %{r: %{}, w: %{}},
+           resolver: :r20,
+           type: :resolver
+         }
+       }
+     ],
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 30],
+         label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 11],
+         label: %{
+           expects: %{y: %{}},
+           input: %{s: %{}},
+           resolver: :r21,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 19],
+         label: %{
+           expects: %{y: %{}},
+           input: %{ac: %{}},
+           resolver: :r26,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 29],
+       label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 26],
+         label: %{
+           expects: %{af: %{}},
+           input: %{ae: %{}},
+           resolver: :r29,
+           type: :resolver
+         }
+       }
+     ],
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 23],
+         label: %{
+           expects: %{z: %{}},
+           input: %{ab: %{}},
+           resolver: :r25,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 25],
+         label: %{
+           expects: %{ab: %{}},
+           input: %{af: %{}},
+           resolver: :r30,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 27],
+         label: %{
+           expects: %{ab: %{}},
+           input: %{ad: %{}},
+           resolver: :r31,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 30],
+       label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 22],
+         label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+       }
+     ],
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 9],
+         label: %{
+           expects: %{o: %{}},
+           input: %{z: %{}},
+           resolver: :r23,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 10],
+         label: %{
+           expects: %{z: %{}},
+           input: %{y: %{}},
+           resolver: :r22,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 23],
+         label: %{
+           expects: %{z: %{}},
+           input: %{ab: %{}},
+           resolver: :r25,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 31],
+       label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 6],
+         label: %{
+           expects: %{n: %{}},
+           input: %{l: %{}},
+           resolver: :r6,
+           type: :resolver
+         }
+       }
+     ],
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 4],
+         label: %{
+           expects: %{p: %{}},
+           input: %{o: %{}},
+           resolver: :r9,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 5],
+         label: %{
+           expects: %{o: %{}},
+           input: %{n: %{}},
+           resolver: :r7,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 9],
+         label: %{
+           expects: %{o: %{}},
+           input: %{z: %{}},
+           resolver: :r23,
+           type: :resolver
+         }
+       }
+     ]}
+  ],
+  root: [
+    {%Digraph.Vertex{
+       id: [:"$v" | 3],
+       label: %{
+         expects: %{e: %{}},
+         input: %{c: %{}},
+         resolver: :r3,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 2],
+         label: %{
+           expects: %{l: %{}},
+           input: %{e: %{}},
+           resolver: :r4,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 8],
+       label: %{
+         expects: %{e: %{}},
+         input: %{c: %{}},
+         resolver: :r3,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 7],
+         label: %{
+           expects: %{l: %{}},
+           input: %{e: %{}},
+           resolver: :r4,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 12],
+       label: %{
+         expects: %{s: %{}},
+         input: %{r: %{}, w: %{}},
+         resolver: :r20,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 22],
+         label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 17],
+       label: %{branches: [[:"$v" | 15], [:"$v" | 16]], type: :or}
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 14],
+         label: %{
+           expects: %{w: %{}},
+           input: %{v: %{}},
+           resolver: :r19,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 15],
+         label: %{
+           expects: %{v: %{}},
+           input: %{t: %{}},
+           resolver: :r17,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 16],
+         label: %{
+           expects: %{v: %{}},
+           input: %{u: %{}},
+           resolver: :r18,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 18],
+       label: %{
+         branches: [[:"$v" | 14], [:"$v" | 13], [:"$v" | 14], [:"$v" | 13]],
+         type: :and
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 14],
+         label: %{
+           expects: %{w: %{}},
+           input: %{v: %{}},
+           resolver: :r19,
+           type: :resolver
+         }
+       },
+       %Digraph.Vertex{
+         id: [:"$v" | 13],
+         label: %{
+           expects: %{r: %{}},
+           input: %{q: %{}},
+           resolver: :r16,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 21],
+       label: %{
+         expects: %{ad: %{}},
+         input: %{ae: %{}},
+         resolver: :r28,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 20],
+         label: %{
+           expects: %{ac: %{}},
+           input: %{ad: %{}},
+           resolver: :r27,
+           type: :resolver
+         }
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 26],
+       label: %{
+         expects: %{af: %{}},
+         input: %{ae: %{}},
+         resolver: :r29,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 29],
+         label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+       }
+     ]},
+    {%Digraph.Vertex{
+       id: [:"$v" | 28],
+       label: %{
+         expects: %{ad: %{}},
+         input: %{ae: %{}},
+         resolver: :r28,
+         type: :resolver
+       }
+     },
+     [
+       %Digraph.Vertex{
+         id: [:"$v" | 27],
+         label: %{
+           expects: %{ab: %{}},
+           input: %{ad: %{}},
+           resolver: :r31,
+           type: :resolver
+         }
+       }
+     ]}
+  ]
+}
+
+
+
+
+
+
+[
+  {%Digraph.Vertex{
+     id: [:"$v" | 0],
+     label: %{
+       expects: %{p: %{}},
+       input: %{m: %{}},
+       resolver: :r8,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 1],
+       label: %{
+         expects: %{m: %{}},
+         input: %{l: %{}},
+         resolver: :r5,
+         type: :resolver
+       }
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 1],
+     label: %{
+       expects: %{m: %{}},
+       input: %{l: %{}},
+       resolver: :r5,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 2],
+       label: %{
+         expects: %{l: %{}},
+         input: %{e: %{}},
+         resolver: :r4,
+         type: :resolver
+       }
+     }
+   ],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 0],
+       label: %{
+         expects: %{p: %{}},
+         input: %{m: %{}},
+         resolver: :r8,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 2],
+     label: %{
+       expects: %{l: %{}},
+       input: %{e: %{}},
+       resolver: :r4,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 3],
+       label: %{
+         expects: %{e: %{}},
+         input: %{c: %{}},
+         resolver: :r3,
+         type: :resolver
+       }
+     }
+   ],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 1],
+       label: %{
+         expects: %{m: %{}},
+         input: %{l: %{}},
+         resolver: :r5,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 3],
+     label: %{
+       expects: %{e: %{}},
+       input: %{c: %{}},
+       resolver: :r3,
+       type: :resolver
+     }
+   }, [],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 2],
+       label: %{
+         expects: %{l: %{}},
+         input: %{e: %{}},
+         resolver: :r4,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 4],
+     label: %{
+       expects: %{p: %{}},
+       input: %{o: %{}},
+       resolver: :r9,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 31],
+       label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 5],
+     label: %{
+       expects: %{o: %{}},
+       input: %{n: %{}},
+       resolver: :r7,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 31],
+       label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 6],
+     label: %{
+       expects: %{n: %{}},
+       input: %{l: %{}},
+       resolver: :r6,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 7],
+       label: %{
+         expects: %{l: %{}},
+         input: %{e: %{}},
+         resolver: :r4,
+         type: :resolver
+       }
+     }
+   ],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 31],
+       label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 7],
+     label: %{
+       expects: %{l: %{}},
+       input: %{e: %{}},
+       resolver: :r4,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 8],
+       label: %{
+         expects: %{e: %{}},
+         input: %{c: %{}},
+         resolver: :r3,
+         type: :resolver
+       }
+     }
+   ],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 6],
+       label: %{
+         expects: %{n: %{}},
+         input: %{l: %{}},
+         resolver: :r6,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 8],
+     label: %{
+       expects: %{e: %{}},
+       input: %{c: %{}},
+       resolver: :r3,
+       type: :resolver
+     }
+   }, [],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 7],
+       label: %{
+         expects: %{l: %{}},
+         input: %{e: %{}},
+         resolver: :r4,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 9],
+     label: %{
+       expects: %{o: %{}},
+       input: %{z: %{}},
+       resolver: :r23,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 30],
+       label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 31],
+       label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 10],
+     label: %{
+       expects: %{z: %{}},
+       input: %{y: %{}},
+       resolver: :r22,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 30],
+       label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 11],
+     label: %{
+       expects: %{y: %{}},
+       input: %{s: %{}},
+       resolver: :r21,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 22],
+       label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 12],
+     label: %{
+       expects: %{s: %{}},
+       input: %{r: %{}, w: %{}},
+       resolver: :r20,
+       type: :resolver
+     }
+   }, [],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 22],
+       label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 13],
+     label: %{
+       expects: %{r: %{}},
+       input: %{q: %{}},
+       resolver: :r16,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 18],
+       label: %{
+         branches: [[:"$v" | 14], [:"$v" | 13], [:"$v" | 14], [:"$v" | 13]],
+         type: :and
+       }
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 14],
+     label: %{
+       expects: %{w: %{}},
+       input: %{v: %{}},
+       resolver: :r19,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 17],
+       label: %{branches: [[:"$v" | 15], [:"$v" | 16]], type: :or}
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 18],
+       label: %{
+         branches: [[:"$v" | 14], [:"$v" | 13], [:"$v" | 14], [:"$v" | 13]],
+         type: :and
+       }
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 15],
+     label: %{
+       expects: %{v: %{}},
+       input: %{t: %{}},
+       resolver: :r17,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 17],
+       label: %{branches: [[:"$v" | 15], [:"$v" | 16]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 16],
+     label: %{
+       expects: %{v: %{}},
+       input: %{u: %{}},
+       resolver: :r18,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 17],
+       label: %{branches: [[:"$v" | 15], [:"$v" | 16]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 17],
+     label: %{branches: [[:"$v" | 15], [:"$v" | 16]], type: :or}
+   }, [],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 14],
+       label: %{
+         expects: %{w: %{}},
+         input: %{v: %{}},
+         resolver: :r19,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 15],
+       label: %{
+         expects: %{v: %{}},
+         input: %{t: %{}},
+         resolver: :r17,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 16],
+       label: %{
+         expects: %{v: %{}},
+         input: %{u: %{}},
+         resolver: :r18,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 18],
+     label: %{
+       branches: [[:"$v" | 14], [:"$v" | 13], [:"$v" | 14], [:"$v" | 13]],
+       type: :and
+     }
+   }, [],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 14],
+       label: %{
+         expects: %{w: %{}},
+         input: %{v: %{}},
+         resolver: :r19,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 13],
+       label: %{
+         expects: %{r: %{}},
+         input: %{q: %{}},
+         resolver: :r16,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 19],
+     label: %{
+       expects: %{y: %{}},
+       input: %{ac: %{}},
+       resolver: :r26,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 20],
+       label: %{
+         expects: %{ac: %{}},
+         input: %{ad: %{}},
+         resolver: :r27,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 22],
+       label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 20],
+     label: %{
+       expects: %{ac: %{}},
+       input: %{ad: %{}},
+       resolver: :r27,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 21],
+       label: %{
+         expects: %{ad: %{}},
+         input: %{ae: %{}},
+         resolver: :r28,
+         type: :resolver
+       }
+     }
+   ],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 19],
+       label: %{
+         expects: %{y: %{}},
+         input: %{ac: %{}},
+         resolver: :r26,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 21],
+     label: %{
+       expects: %{ad: %{}},
+       input: %{ae: %{}},
+       resolver: :r28,
+       type: :resolver
+     }
+   }, [],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 20],
+       label: %{
+         expects: %{ac: %{}},
+         input: %{ad: %{}},
+         resolver: :r27,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 22],
+     label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 12],
+       label: %{
+         expects: %{s: %{}},
+         input: %{r: %{}, w: %{}},
+         resolver: :r20,
+         type: :resolver
+       }
+     }
+   ],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 30],
+       label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 11],
+       label: %{
+         expects: %{y: %{}},
+         input: %{s: %{}},
+         resolver: :r21,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 19],
+       label: %{
+         expects: %{y: %{}},
+         input: %{ac: %{}},
+         resolver: :r26,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 23],
+     label: %{
+       expects: %{z: %{}},
+       input: %{ab: %{}},
+       resolver: :r25,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 29],
+       label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 30],
+       label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 25],
+     label: %{
+       expects: %{ab: %{}},
+       input: %{af: %{}},
+       resolver: :r30,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 29],
+       label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 26],
+     label: %{
+       expects: %{af: %{}},
+       input: %{ae: %{}},
+       resolver: :r29,
+       type: :resolver
+     }
+   }, [],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 29],
+       label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 27],
+     label: %{
+       expects: %{ab: %{}},
+       input: %{ad: %{}},
+       resolver: :r31,
+       type: :resolver
+     }
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 28],
+       label: %{
+         expects: %{ad: %{}},
+         input: %{ae: %{}},
+         resolver: :r28,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 29],
+       label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+     }
+   ], []},
+  {%Digraph.Vertex{
+     id: [:"$v" | 28],
+     label: %{
+       expects: %{ad: %{}},
+       input: %{ae: %{}},
+       resolver: :r28,
+       type: :resolver
+     }
+   }, [],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 27],
+       label: %{
+         expects: %{ab: %{}},
+         input: %{ad: %{}},
+         resolver: :r31,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 29],
+     label: %{branches: [[:"$v" | 25], [:"$v" | 27]], type: :or}
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 26],
+       label: %{
+         expects: %{af: %{}},
+         input: %{ae: %{}},
+         resolver: :r29,
+         type: :resolver
+       }
+     }
+   ],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 23],
+       label: %{
+         expects: %{z: %{}},
+         input: %{ab: %{}},
+         resolver: :r25,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 25],
+       label: %{
+         expects: %{ab: %{}},
+         input: %{af: %{}},
+         resolver: :r30,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 27],
+       label: %{
+         expects: %{ab: %{}},
+         input: %{ad: %{}},
+         resolver: :r31,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 30],
+     label: %{branches: [[:"$v" | 10], [:"$v" | 23]], type: :or}
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 22],
+       label: %{branches: [[:"$v" | 11], [:"$v" | 19]], type: :or}
+     }
+   ],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 9],
+       label: %{
+         expects: %{o: %{}},
+         input: %{z: %{}},
+         resolver: :r23,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 10],
+       label: %{
+         expects: %{z: %{}},
+         input: %{y: %{}},
+         resolver: :r22,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 23],
+       label: %{
+         expects: %{z: %{}},
+         input: %{ab: %{}},
+         resolver: :r25,
+         type: :resolver
+       }
+     }
+   ]},
+  {%Digraph.Vertex{
+     id: [:"$v" | 31],
+     label: %{branches: [[:"$v" | 5], [:"$v" | 9]], type: :or}
+   },
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 6],
+       label: %{
+         expects: %{n: %{}},
+         input: %{l: %{}},
+         resolver: :r6,
+         type: :resolver
+       }
+     }
+   ],
+   [
+     %Digraph.Vertex{
+       id: [:"$v" | 4],
+       label: %{
+         expects: %{p: %{}},
+         input: %{o: %{}},
+         resolver: :r9,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 5],
+       label: %{
+         expects: %{o: %{}},
+         input: %{n: %{}},
+         resolver: :r7,
+         type: :resolver
+       }
+     },
+     %Digraph.Vertex{
+       id: [:"$v" | 9],
+       label: %{
+         expects: %{o: %{}},
+         input: %{z: %{}},
+         resolver: :r23,
+         type: :resolver
+       }
+     }
+   ]}
+]

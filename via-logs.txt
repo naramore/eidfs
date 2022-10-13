@@ -1,0 +1,284 @@
+  Process attribute :p
+  Add nodes for input path %{m: %{}}
+  - Computing :p dependencies %{m: %{}}
+  - Processing dependency %{m: %{}}
+  - Process attribute :m
+  - Add nodes for input path %{l: %{}}
+  -- Computing :m dependencies %{l: %{}}
+  -- Processing dependency %{l: %{}}
+  -- Process attribute :l
+  -- Add nodes for input path %{e: %{}}
+  --- Computing :l dependencies %{e: %{}}
+  --- Processing dependency %{e: %{}}
+  --- Process attribute :e
+  --- Add nodes for input path %{c: %{}}
+  ---- Computing :e dependencies %{c: %{}}
+  ---- Processing dependency %{c: %{}}
+  ---- Process attribute :c
+  ---- Add nodes for input path %{}
++ ----- Computing :c dependencies %{}
++ ----- Processing dependency %{}
++ ----- Complete computing deps %{}
++ ---- Chained deps
+  ---- Complete computing deps %{c: %{}}
+  --- Chained deps
+  --- Complete computing deps %{e: %{}}
+  -- Chained deps
+  -- Complete computing deps %{l: %{}}
+  - Chained deps
+  - Complete computing deps %{m: %{}}
+  Chained deps
+  Add nodes for input path %{o: %{}}
+  - Computing :p dependencies %{o: %{}}
+  - Processing dependency %{o: %{}}
+  - Process attribute :o
+  - Add nodes for input path %{n: %{}}
+  -- Computing :o dependencies %{n: %{}}
+  -- Processing dependency %{n: %{}}
+  -- Process attribute :n
+  -- Add nodes for input path %{l: %{}}
+  --- Computing :n dependencies %{l: %{}}
+  --- Processing dependency %{l: %{}}
+  --- Process attribute :l
+  --- Add nodes for input path %{e: %{}}
+  ---- Computing :l dependencies %{e: %{}}
+  ---- Processing dependency %{e: %{}}
+  ---- Process attribute :e
+  ---- Add nodes for input path %{c: %{}}
+  ----- Computing :e dependencies %{c: %{}}
+  ----- Processing dependency %{c: %{}}
+  ----- Process attribute :c
+  ----- Add nodes for input path %{}
++ ------ Computing :c dependencies %{}
++ ------ Processing dependency %{}
++ ------ Complete computing deps %{}
++ ----- Chained deps
+  ----- Complete computing deps %{c: %{}}
+  ---- Chained deps
+  ---- Complete computing deps %{e: %{}}
+  --- Chained deps
+  --- Complete computing deps %{l: %{}}
+  -- Chained deps
+  -- Complete computing deps %{n: %{}}
+  - Chained deps
+  - Add nodes for input path %{z: %{}}
+  -- Computing :o dependencies %{z: %{}}
+  -- Processing dependency %{z: %{}}
+  -- Process attribute :z
+  -- Add nodes for input path %{y: %{}}
+  --- Computing :z dependencies %{y: %{}}
+  --- Processing dependency %{y: %{}}
+  --- Process attribute :y
+  --- Add nodes for input path %{s: %{}}
+  ---- Computing :y dependencies %{s: %{}}
+  ---- Processing dependency %{s: %{}}
+  ---- Process attribute :s
+  ---- Add nodes for input path %{r: %{}, w: %{}}
+  ----- Computing :s dependencies %{r: %{}, w: %{}}
+  ----- Processing dependency %{r: %{}, w: %{}}
+  ----- Process attribute :r
+  ----- Add nodes for input path %{q: %{}}
+  ------ Computing :r dependencies %{q: %{}}
+  ------ Processing dependency %{q: %{}}
+  ------ Process attribute :q
+  ------ Add nodes for input path %{}
++ ------- Computing :q dependencies %{}
++ ------- Processing dependency %{}
++ ------- Complete computing deps %{}
++ ------ Chained deps
+  ------ Complete computing deps %{q: %{}}
+  ----- Chained deps
+  ----- Process attribute :w
+  ----- Add nodes for input path %{v: %{}}
+  ------ Computing :w dependencies %{v: %{}}
+  ------ Processing dependency %{v: %{}}
+  ------ Process attribute :v
+  ------ Add nodes for input path %{t: %{}}
+  ------- Computing :v dependencies %{t: %{}}
+  ------- Processing dependency %{t: %{}}
+  ------- Process attribute :t
+  ------- Add nodes for input path %{}
++ -------- Computing :t dependencies %{}
++ -------- Processing dependency %{}
++ -------- Complete computing deps %{}
++ ------- Chained deps
+  ------- Complete computing deps %{t: %{}}
+  ------ Chained deps
+  ------ Add nodes for input path %{u: %{}}
+  ------- Computing :v dependencies %{u: %{}}
+  ------- Processing dependency %{u: %{}}
+  ------- Process attribute :u
+  ------- Add nodes for input path %{}
++ -------- Computing :u dependencies %{}
++ -------- Processing dependency %{}
++ -------- Complete computing deps %{}
++ ------- Chained deps
+  ------- Complete computing deps %{u: %{}}
+  ------ Chained deps
+- ------ Create root OR
+  ------ Complete computing deps %{v: %{}}
+  ----- Chained deps
+- ----- Create root AND
+  ----- Complete computing deps %{r: %{}, w: %{}}
+  ---- Chained deps
++ ---- Create root AND
+  ---- Complete computing deps %{s: %{}}
+  --- Chained deps
+  --- Add nodes for input path %{ac: %{}}
+  ---- Computing :y dependencies %{ac: %{}}
+  ---- Processing dependency %{ac: %{}}
+  ---- Process attribute :ac
+  ---- Add nodes for input path %{ad: %{}}
+  ----- Computing :ac dependencies %{ad: %{}}
+  ----- Processing dependency %{ad: %{}}
+  ----- Process attribute :ad
+  ----- Add nodes for input path %{ae: %{}}
+  ------ Computing :ad dependencies %{ae: %{}}
+  ------ Processing dependency %{ae: %{}}
+  ------ Process attribute :ae
+  ------ Add nodes for input path %{}
++ ------- Computing :ae dependencies %{}
++ ------- Processing dependency %{}
++ ------- Complete computing deps %{}
++ ------ Chained deps
+  ------ Complete computing deps %{ae: %{}}
+  ----- Chained deps
+  ----- Complete computing deps %{ad: %{}}
+  ---- Chained deps
+  ---- Complete computing deps %{ac: %{}}
+  --- Chained deps
+- --- Create root OR
+  --- Complete computing deps %{y: %{}}
+  -- Chained deps
+  -- Add nodes for input path %{ab: %{}}
+  --- Computing :z dependencies %{ab: %{}}
+  --- Processing dependency %{ab: %{}}
+  --- Process attribute :ab
+  --- Add nodes for input path %{aa: %{}}
+  ---- Computing :ab dependencies %{aa: %{}}
+  ---- Processing dependency %{aa: %{}}
+- ---- Process attribute :aa
+  ---- Mark path %{aa: %{}} as unreachable
++ ---- Failed to compute dependencies %{aa: %{}}
+- --- Chained deps
+  --- Add nodes for input path %{af: %{}}
+  ---- Computing :ab dependencies %{af: %{}}
+  ---- Processing dependency %{af: %{}}
+  ---- Process attribute :af
+  ---- Add nodes for input path %{ae: %{}}
+  ----- Computing :af dependencies %{ae: %{}}
+  ----- Processing dependency %{ae: %{}}
+  ----- Process attribute :ae
+  ----- Add nodes for input path %{}
++ ------ Computing :ae dependencies %{}
++ ------ Processing dependency %{}
++ ------ Complete computing deps %{}
++ ----- Chained deps
+  ----- Complete computing deps %{ae: %{}}
+  ---- Chained deps
+  ---- Complete computing deps %{af: %{}}
+  --- Chained deps
+  --- Add nodes for input path %{ad: %{}}
+  ---- Computing :ab dependencies %{ad: %{}}
+  ---- Processing dependency %{ad: %{}}
+  ---- Process attribute :ad
+  ---- Add nodes for input path %{ae: %{}}
+  ----- Computing :ad dependencies %{ae: %{}}
+  ----- Processing dependency %{ae: %{}}
+  ----- Process attribute :ae
+  ----- Add nodes for input path %{}
++ ------ Computing :ae dependencies %{}
++ ------ Processing dependency %{}
++ ------ Complete computing deps %{}
++ ----- Chained deps
+  ----- Complete computing deps %{ae: %{}}
+  ---- Chained deps
+  ---- Complete computing deps %{ad: %{}}
+  --- Chained deps
+- --- Create root OR
+  --- Complete computing deps %{ab: %{}}
+  -- Chained deps
+- -- Create root OR
+  -- Complete computing deps %{z: %{}}
+  - Chained deps
+- - Create root OR
+  - Complete computing deps %{o: %{}}
+  Chained deps
+  Add nodes for input path %{k: %{}}
+  - Computing :p dependencies %{k: %{}}
+  - Processing dependency %{k: %{}}
+  - Process attribute :k
+  - Add nodes for input path %{g: %{}}
+  -- Computing :k dependencies %{g: %{}}
+  -- Processing dependency %{g: %{}}
+  -- Process attribute :g
+  -- Add nodes for input path %{h: %{}}
+  --- Computing :g dependencies %{h: %{}}
+  --- Processing dependency %{h: %{}}
+  --- Process attribute :h
+  --- Add nodes for input path %{i: %{}}
+  ---- Computing :h dependencies %{i: %{}}
+  ---- Processing dependency %{i: %{}}
+  ---- Process attribute :i
+  ---- Add nodes for input path %{j: %{}}
+  ----- Computing :i dependencies %{j: %{}}
+  ----- Processing dependency %{j: %{}}
+  ----- Process attribute :j
+  ----- Add nodes for input path %{g: %{}}
+  ------ Computing :j dependencies %{g: %{}}
+  ------ Processing dependency %{g: %{}}
++ ------ Process attribute :g
+- ------ Attribute cycle detected for :g
+- ------ Failed to compute dependencies for %{g: %{}}
++ ------ Mark path %{g: %{}} as unreachable
++ ----- Chained deps
+  ----- Mark path %{j: %{}} as unreachable
+- ----- Failed to compute dependencies for %{j: %{}}
++ ---- Chained deps
+  ---- Mark path %{i: %{}} as unreachable
+- ---- Failed to compute dependencies for %{i: %{}}
++ --- Chained deps
+  --- Mark path %{h: %{}} as unreachable
+- --- Failed to compute dependencies for %{h: %{}}
++ -- Chained deps
+  -- Mark path %{g: %{}} as unreachable
+- -- Failed to compute dependencies for %{g: %{}}
++ - Chained deps
+  - Add nodes for input path %{f: %{}}
+  -- Computing :k dependencies %{f: %{}}
+  -- Processing dependency %{f: %{}}
+  -- Process attribute :f
+  -- Add nodes for input path %{b: %{}, d: %{}}
+  --- Computing :f dependencies %{b: %{}, d: %{}}
++ --- Processing dependency %{b: %{}, d: %{}}
+  --- Processing dependency %{b: %{}}
+  --- Process attribute :b
+  --- Add nodes for input path %{a: %{}}
+  ---- Computing :b dependencies %{a: %{}}
+  ---- Processing dependency %{a: %{}}
++ ---- Process attribute :a
+  ---- Mark path %{a: %{}} as unreachable
+- ---- Failed to compute dependencies for %{a: %{}}
++ --- Chained deps
+  --- Mark path %{b: %{}, d: %{}} as unreachable
+- --- Failed to compute dependencies for %{b: %{}, d: %{}}
++ -- Chained deps
++ -- Create root AND
+  -- Mark path %{f: %{}} as unreachable
+- -- Failed to compute dependencies for %{f: %{}}
++ - Chained deps
+  - Mark path %{k: %{}} as unreachable
+- - Failed to compute dependencies for %{k: %{}}
++ Chained deps
+- Create root OR
+
+
+
+
+TODO:
+- remove logs from traversal to []
+- don't mark as unreachable the cycle point, wait to check that on the way back...
+- Failed to compute dependencies on :halt
+- and node beginning logs aren't correct... 
+- create root AND in wrong place
+- create root OR

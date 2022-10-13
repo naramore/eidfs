@@ -410,8 +410,10 @@ test-coverage:
     ARG ELIXIR
     ARG ERLANG
     FROM +test-base-compiled --ELIXIR=${ELIXIR} --ERLANG=${ERLANG}
-    COPY ./config/coveralls.json ./config
-    ARG COV_CONFIG=./config/coveralls.json
+    COPY --if-exists ./config/coveralls.json ./config
+    IF [ -f ./config/coveralls.json ]
+        ARG COV_CONFIG=./config/coveralls.json
+    END
     RUN mix test --trace --cover --slowest=10
 
 lint-docs:
@@ -425,8 +427,12 @@ lint:
     ARG ELIXIR
     ARG ERLANG
     FROM +test-base-compiled --ELIXIR=${ELIXIR} --ERLANG=${ERLANG}
-    COPY ./config/.credo.exs ./config
-    RUN --no-cache mix credo suggest -a --strict --config-file=./config/.credo.exs
+    COPY --if-exists ./config/.credo.exs ./config
+    IF [ -f ./config/.credo.exs ]
+        RUN --no-cache mix credo suggest -a --strict --config-file=./config/.credo.exs
+    ELSE
+        RUN --no-cache mix credo suggest -a --strict
+    END
 
 check-compile-warnings:
     ARG ELIXIR
