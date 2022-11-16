@@ -1,0 +1,43 @@
+
+spec
+    leaf        :: {:leaf, id, enter :: (ctx -> ctx), leave :: (ctx -> ctx), error :: (ctx, error -> ctx)}
+    pipe        :: {:pipe, id, stages :: [t]}
+    feedback    :: {:feedback, id, stage :: t, filter :: (ctx -> boolean | {boolean, ctx})}
+    cluster     :: {:cluster, id, decomp :: (ctx -> [{id, t, ctx}]), recomp :: ([{id, ctx}] -> ctx)}
+state
+    leaf        :: id, enter :: (ctx -> ctx), leave :: (ctx -> ctx), error :: (ctx, error -> ctx), last_invoked :: :enter | :leave | {:error, reason} | nil
+    pipe        :: id, queue :: :queue.queue(t), current :: t, stack :: [t], direction :: :enter | :leave | {:error, reason}
+    feedback    :: id, stage :: t, filter :: (ctx -> boolean | {boolean, ctx}), direction :: :enter | :leave | {:error, reason}
+    cluster     :: id,
+                   decomp :: (ctx -> [{id, t, ctx}]),
+                   recomp :: ([{id, ctx}] -> ctx),
+                   running :: [{id, t, ctx, task, direction}],
+                   done :: [{id, t, ctx, direction}],
+                   direction :: :enter | :leave | {:error, reason}
+protocol
+    invoke(t, ctx) :: ctx
+    status(t, ctx) :: nil | :entering | :entered | :leaving | :left | {:erroring | :errored, reason}
+    navigation
+        current(t) :: {t, :enter | :leave | {:error, reason}}
+        previous|next(t, ctx) :: {t, :enter | :leave | {:error, reason}}
+        root_pipe(ctx) :: {t, :enter | :leave | {:error, reason}}
+        root|parent(t, ctx) :: {t, :enter | :leave | {:error, reason}}
+        ancestors(t, ctx) :: [{t, :enter | :leave | {:error, reason}}]
+    modify
+        direction -> enter|leave(t) :: t | error(t, reason) :: t
+        path -> terminate|halt|retry(t) :: t | skip(t, pos) :: t
+        spec/state
+            leaf
+                update(leaf, :enter | :leave, (f -> f)) :: leaf
+                update_error(leaf, (ef -> ef)) :: leaf
+            pipe
+                update(pipe, pos, (t -> t)) :: pipe
+                push(pipe, t, pos :: :front | :rear | {:at, int | id} | {:before | :after, id}) :: pipe
+                drop(pipe, pos) :: pipe
+            feedback
+                update(feedback, (t -> t)) :: feedback
+                update_filter(feedback, (pred -> pred)) :: feedback
+            cluster
+                update(cluster, id, (t -> t)) :: cluster
+                update_decomp(cluster, (decomp -> decomp)) :: cluster
+                update_recomp(cluster, (recomp -> recomp)) :: cluster

@@ -360,18 +360,21 @@ defmodule Via.Graph do
   def walk_edges(module, edges, graph, acc) do
     case module.visit({:pre, :edges}, :cont, edges, graph, acc) do
       {:cont, g, a} ->
-        Enum.reduce(edges, {{:halt, :unreachable}, g, a}, fn edge, {c, g, a} ->
+        Enum.reduce(edges, {[], {{:halt, :unreachable}, g, a}}, fn edge, {es, {c, g, a}} ->
           case walk_edge(module, edge, g, a) do
-            {{:halt, _}, g, a} -> {c, g, a}
-            cga -> cga
+            {{:halt, _}, g, a} -> {es, {c, g, a}}
+            cga -> {[edge | es], cga}
           end
         end)
 
-      otherwise ->
-        otherwise
+      {{:halt, _}, _, _} = cga ->
+        {[], cga}
+
+      {:done, _, _} = cga ->
+        {edges, cga}
     end
-    |> then(fn {c, g, a} ->
-      module.visit({:post, :edges}, c, edges, g, a)
+    |> then(fn {es, {c, g, a}} ->
+      module.visit({:post, :edges}, c, es, g, a)
     end)
   end
 
@@ -461,15 +464,11 @@ defmodule Via.Plan do
 
   defstruct graph: Digraph.new(),
             resolver_index: %{},
-            attr_index: %{},
-            current: nil,
-            branches: []
+            attr_index: %{}
   @type t :: %__MODULE__{
     graph: Digraph.t(),
-    resolver_index: %{optional(Resolver.id()) => MapSet.t(Vertex.id())},
-    attr_index: %{optional(Graph.attr()) => MapSet.t(Vertex.id())},
-    current: Vertex.id() | nil,
-    branches: [Vertex.id()]
+    resolver_index: %{optional(Resolver.id()) => [Vertex.id()]},
+    attr_index: %{optional(Graph.attr()) => [Vertex.id()]}
   }
 
   @spec new(Keyword.t()) :: t()
@@ -492,11 +491,20 @@ defmodule Via.Plan do
       #        2nd -> walk_ast(...) -> get root resolvers -> get inputs -> merge w/ ast shape -> intersect w/ resolver.output
       expects: resolver.output
     })
-    plan = Map.update!(plan, :resolver_index, fn ri -> Map.update(ri, resolver.id, MapSet.new([vid]), &MapSet.put(&1, vid)) end)
+    plan = Map.update!(plan, :resolver_index, fn ri -> Map.update(ri, resolver.id, [vid], &uniq_put(&1, vid)) end)
     plan = Enum.reduce(resolver.output, plan, fn {attr, _shape}, p ->
-      Map.update!(p, :attr_index, fn ai -> Map.update(ai, attr, MapSet.new([vid]), &MapSet.put(&1, vid)) end)
+      Map.update!(p, :attr_index, fn ai -> Map.update(ai, attr, [vid], &uniq_put(&1, vid)) end)
     end)
     {vid, plan}
+  end
+
+  @spec uniq_put(list(), term()) :: list()
+  defp uniq_put(list, x) do
+    if x in list do
+      list
+    else
+      [x | list]
+    end
   end
 
   @spec add_or_node(t(), [Resolver.t()], Via.AST.t()) :: {Vertex.id(), [Vertex.id()], t()}
@@ -543,9 +551,9 @@ defmodule Via.Plan do
   def remove_node(plan, node_id) do
     case Digraph.vertex(plan.graph, node_id) do
       %Vertex{label: %{expects: o, resolver: rid}} ->
-        plan = Map.update!(plan, :resolver_index, fn ri -> Map.update(ri, rid, MapSet.new(), &MapSet.delete(&1, node_id)) end)
+        plan = Map.update!(plan, :resolver_index, fn ri -> Map.update(ri, rid, [], &List.delete(&1, node_id)) end)
         plan = Enum.reduce(o, plan, fn {attr, _shape}, p ->
-          Map.update!(p, :attr_index, fn ai -> Map.update(ai, attr, MapSet.new(), &MapSet.delete(&1, node_id)) end)
+          Map.update!(p, :attr_index, fn ai -> Map.update(ai, attr, [], &List.delete(&1, node_id)) end)
         end)
         Map.update!(plan, :graph, &Digraph.del_vertex(&1, node_id))
 
@@ -623,6 +631,65 @@ defmodule Via.Plan do
 
       _ ->
         {:ok, {node_id, plan}}
+    end
+  end
+
+  @spec find_direct_ancestor(Digraph.t(), Vertex.id()) :: {:ok, Vertex.t()} | {:error, reason :: term()}
+  def find_direct_ancestor(graph, node_id) do
+    case Digraph.in_neighbours(graph, node_id) do
+      [ancestor] -> {:ok, ancestor}
+      _ -> {:error, :not_found}
+    end
+  end
+
+  @spec find_ancestors(Digraph.t(), Vertex.id()) :: [Vertex.t()]
+  def find_ancestors(graph, node_id) do
+    case Digraph.vertex(graph, node_id) do
+      nil -> []
+      node -> :lists.reverse(find_ancestors_impl(graph, node))
+    end
+  end
+
+  @spec find_ancestors_impl(Digraph.t(), Vertex.t()) :: [Vertex.t()]
+  defp find_ancestors_impl(graph, node) do
+    case find_direct_ancestor(graph, node.id) do
+      {:ok, ancestor} -> [ancestor | find_ancestors_impl(graph, ancestor)]
+      _ -> []
+    end
+  end
+
+  @spec find_successors(Digraph.t(), Vertex.id()) :: [Vertex.t()]
+  def find_successors(graph, node_id) do
+    case Digraph.vertex(graph, node_id) do
+      nil -> []
+      node -> [node | find_ancestors(graph, node_id)]
+    end
+  end
+
+  @spec find_leaf(Digraph.t(), Vertex.id()) :: {:ok, Vertex.t()} | {:error, reason :: term()}
+  def find_leaf(graph, node_id) do
+    case Digraph.vertex(graph, node_id) do
+      nil -> {:error, :not_found}
+      node -> {:ok, find_leaf_impl(graph, node)}
+    end
+  end
+
+  @spec find_leaf_impl(Digraph.t(), Vertex.t()) :: Vertex.t()
+  defp find_leaf_impl(graph, node) do
+    case find_next(graph, node.id) do
+      nil -> node
+      next -> find_leaf_impl(graph, next)
+    end
+  end
+
+  @spec find_next(Digraph.t(), Vertex.id()) :: Vertex.t() | nil
+  def find_next(graph, node_id) do
+    graph
+    |> Digraph.out_edges(node_id)
+    |> Enum.reject(&match?(%{label: %{type: :branch}}, &1))
+    |> case do
+      [%{v2: v2}] -> Digraph.vertex(graph, v2)
+      _ -> nil
     end
   end
 end
@@ -867,12 +934,23 @@ defmodule Via.PlannerV2 do
 
   @behaviour Graph
 
-  @spec new() :: Via.Plugins.t()
-  def new do
+  defstruct available_data: %{},
+            plan: Via.Plan.new(),
+            resolver_trail: [],
+            branches: []
+  @type t :: %__MODULE__{
+    available_data: map(),
+    plan: Via.Plan.t(),
+    resolver_trail: [{Digraph.Vertex.id(), Graph.attr(), Graph.attr(), term()}],
+    branches: [Digraph.Vertex.id()]
+  }
+
+  @spec new(Keyword.t()) :: Via.Plugins.t()
+  def new(opts \\ []) do
     Via.Plugins.new(
       module: Via.PlannerV2,
       plugins: [Via.PlannerV2.PrinterPlugin],
-      acc: %{},
+      acc: struct(__MODULE__, opts),
       state: %{depth: 0}
     )
   end
@@ -886,8 +964,59 @@ defmodule Via.PlannerV2 do
   end
 
   @impl Graph
+  def visit(type, cont, data, graph, planner)
+  # def visit({:pre, :ast}, cont, _ast, graph, planner) do
+  #   {cont, graph, planner}
+  # end
+  def visit({:pre, x}, _cont, attr_or_attrs, graph, planner) when x in [:attrs, :attr] do
+    if available?(planner, attr_or_attrs) do
+      {:done, graph, planner}
+    else
+      {:cont, graph, planner}
+    end
+  end
+  def visit({:pre, :edges}, _cont, _edges, graph, planner) do
+    {:cont, graph, planner}
+  end
+  def visit({:pre, :edge}, _cont, _edge, graph, planner) do
+    {:cont, graph, planner}
+  end
+  def visit({:post, :edge}, cont, _edge, graph, planner) do
+    {cont, graph, planner}
+  end
+  def visit({:post, :edges}, :done, [_edge], graph, planner) do
+    {:done, graph, planner}
+  end
+  def visit({:post, :edges}, :done, _edges, graph, planner) do
+    {:done, graph, planner}
+  end
+  def visit({:post, :edges}, cont, _edges, graph, planner) do
+    {cont, graph, planner}
+  end
+  def visit({:post, :attr}, cont, _attr, graph, planner) do
+    {cont, graph, planner}
+  end
+  def visit({:post, :attrs}, :done, _attrs, graph, planner) do
+    # TODO: add AND node
+    {:done, graph, planner}
+  end
+  def visit({:post, :attrs}, cont, _attrs, graph, planner) do
+    {cont, graph, planner}
+  end
+  # def visit({:post, :ast}, cont, _ast, graph, planner) do
+  #   {cont, graph, planner}
+  # end
   def visit(_type, cont, _data, graph, planner) do
     {cont, graph, planner}
+  end
+
+  @spec available?(t(), Via.Graph.attr()) :: boolean()
+  defp available?(_planner, []), do: true
+  defp available?(planner, attrs) when is_list(attrs) do
+    Enum.all?(attrs, &(&1 in Map.keys(planner.available_data)))
+  end
+  defp available?(planner, attr) do
+    attr in Map.keys(planner.available_data)
   end
 
   defmodule PrinterPlugin do
@@ -915,76 +1044,67 @@ defmodule Via.PlannerV2 do
     def decrease_depth?(_, _, _), do: false
 
     def print_stuff(where, type, cont, data, graph, acc)
-    def print_stuff(:pre_depth_inc, {:pre, :attrs}, _, _, _, _) do
+    def print_stuff(_, {:pre, :attrs}, _c, _attrs, _g, _a) do
       :ok
     end
-    def print_stuff(:post_depth_inc, {:pre, :attrs}, _, _, _, _) do
+    def print_stuff(_, {:pre, :attr}, _c, [], _g, _a) do
       :ok
     end
-    def print_stuff(:pre_depth_dec, {:post, :attrs}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:post_depth_dec, {:post, :attrs}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:pre_depth_inc, {:pre, :attr}, _, attr, _, a) do
-      if is_list(attr) do
-        :ok
-      else
-        snapshot(a, "Process attribute #{inspect(attr)}")
+    def print_stuff(:pre_depth_inc, {:pre, :attr}, _c, attr, _g, %{state: %{depth: d}} = a) do
+      _ = if d > 0 do
+        snapshot(a, "Processing dependency #{inspect(to_shape(attr))}")
       end
+
+      snapshot(a, "Process attribute #{inspect(attr)}")
     end
-    def print_stuff(:post_depth_inc, {:pre, :attr}, _, attr, _, _) do
-      case attr do
-        _ -> :ok
-      end
-    end
-    def print_stuff(:pre_depth_dec, {:post, :attr}, cont, attr, _, a) do
-      case cont do
-        {:halt, :cycle} ->
-          snapshot(a, "Attribute cycle detected for #{inspect(attr)}")
-        _ ->
-          :ok
-      end
-    end
-    def print_stuff(:post_depth_dec, {:post, :attr}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:pre_depth_inc, {:pre, :edges}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:post_depth_inc, {:pre, :edges}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:pre_depth_dec, {:post, :edges}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:post_depth_dec, {:post, :edges}, _, _, _, _) do
-      :ok
-    end
-    def print_stuff(:pre_depth_inc, {:pre, :edge}, _, {_, i, _, _}, _, a) do
+    def print_stuff(:pre_depth_inc, {:pre, :edge}, _c, {_, i, _, _}, _g, a) do
       snapshot(a, "Add nodes for input path #{inspect(to_shape(i))}")
     end
-    def print_stuff(:post_depth_inc, {:pre, :edge}, _, {_, i, o, _}, _, a) do
-      _ = snapshot(a, "Computing #{inspect(o)} dependencies #{inspect(to_shape(i))}")
-      snapshot(a, "Processing dependency #{inspect(to_shape(i))}")
+    def print_stuff(:post_depth_inc, {:pre, :edge}, _c, {_, [], _, _}, _g, _a) do
+      :ok
     end
-    def print_stuff(:pre_depth_dec, {:post, :edge}, cont, {_, i, _, _}, _, a) do
-      case cont do
-        {:halt, _} ->
-          snapshot(a, "Mark path #{inspect(to_shape(i))} as unreachable")
-        _ ->
-          snapshot(a, "Complete computing deps #{inspect(to_shape(i))}")
-      end
+    def print_stuff(:post_depth_inc, {:pre, :edge}, _c, {_, i, o, _}, _g, a) do
+      snapshot(a, "Computing #{inspect(o)} dependencies for #{inspect(to_shape(i))}")
     end
-    def print_stuff(:post_depth_dec, {:post, :edge}, _, {_, i, _, _}, _, a) do
-      _ = snapshot(a, "Chained deps")
-      case i do
-        [_ | _] -> snapshot(a, "Create root AND")
-        _ -> :ok
-      end
+    def print_stuff(:pre_depth_dec, {:post, :edge}, {:halt, :cyclic}, {_, i, _, _}, _g, a) do
+      _ = snapshot(a, "Attribute cycle detected for #{inspect(i)}")
+      snapshot(a, "Failed to compute dependencies for #{inspect(to_shape(i))}")
     end
-    def print_stuff(_where, _t, _c, _d, _g, _a) do
+    def print_stuff(:pre_depth_dec, {:post, :edge}, {:halt, _}, {_, i, _, _}, _g, a) do
+      _ = snapshot(a, "Mark path #{inspect(to_shape(i))} as unreachable")
+      snapshot(a, "Failed to compute dependencies for #{inspect(to_shape(i))}")
+    end
+    def print_stuff(:pre_depth_dec, {:post, :edge}, _c, {_, [], _, _}, _g, _a) do
+      :ok
+    end
+    def print_stuff(:pre_depth_dec, {:post, :edge}, _c, {_, i, _, _}, _g, a) do
+      snapshot(a, "Complete computing deps #{inspect(to_shape(i))}")
+    end
+    def print_stuff(:post_depth_dec, {:post, :edge}, {:halt, _}, _edge, _g, _a) do
+      :ok
+    end
+    def print_stuff(:post_depth_dec, {:post, :edge}, _c, {_, [], _, _}, _g, _a) do
+      :ok
+    end
+    def print_stuff(:post_depth_dec, {:post, :edge}, _c, _edge, _g, a) do
+      snapshot(a, "Chained deps")
+    end
+    def print_stuff(_, {:post, :edges}, {:halt, _}, _edges, _g, _a) do
+      :ok
+    end
+    def print_stuff(:post_depth_dec, {:post, :edges}, _c, edges, _g, a) when length(edges) > 1 do
+      snapshot(a, "Create root OR")
+    end
+    def print_stuff(_, {:post, :attr}, _c, _attr, _g, _a) do
+      :ok
+    end
+    def print_stuff(_, {:post, :attrs}, {:halt, _}, _attrs, _g, _a) do
+      :ok
+    end
+    def print_stuff(:post_depth_dec, {:post, :attrs}, _c, _attrs, _g, a) do
+      snapshot(a, "Create root AND")
+    end
+    def print_stuff(_, _, _, _, _, _) do
       :ok
     end
 
@@ -1052,8 +1172,8 @@ defmodule Via.Example do
       :z {{:y {}} #{r22}
           {:ab {}} #{r25}},
       :ab {{:aa {}} #{r24}
-           {:af {}} #{r30}
-           {:ad {}} #{r31}},
+            {:af {}} #{r30}
+            {:ad {}} #{r31}},
       :ac {{:ad {}} #{r27}},
       :ad {{:ae {}} #{r28}},
       :ae {{} #{s5}},

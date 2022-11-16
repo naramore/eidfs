@@ -1,228 +1,297 @@
-Process attribute :p                            # <= pre_visit_attr(:p, _, _)
-Add nodes for input path {:m {}}                # <= pre_visit_edge(_, _, _)
-- Computing :p dependencies for {:m {}}         # ...
-- Processing dependency {:m {}}                 # ...
-- Process attribute :m                          # <= pre_visit_attr(:m, _, _)
-- Add nodes for input path {:l {}}              # <= pre_visit_edge(_, _, _)
--- Computing :m dependencies {:l {}}            # ...
--- Processing depencency {:l {}}                # ...
--- Process attribute :l                         # <= pre_visit_attr(:l, _, _)
--- Add nodes for input path {:e {}}             # <= pre_visit_edge(_, _, _)
---- Computing :l dependencies {:e {}}           #
---- Processing dependency {:e {}}               #
---- Process attribute :e                        # <= pre_visit_attr(:e, _, _)
---- Add nodes for input path {:c {}}            # <= pre_visit_edge(_, _, _)
----- Computing :e dependencies {:c {}}          #
----- Processing dependency {:c {}}              #
----- Process attribute :c                       # <= pre_visit_attr(:c, _, _)
----- Add nodes for input path {}                # <= pre_visit_edge(_, _, _)
----- Complete computing deps {:c {}}            # <= post_visit_edge(:done, _, _, _)
---- Chained deps                                #
---- Complete computing deps {:e {}}             # <= post_visit_edge(:done, _, _, _)
--- Chained deps                                 #
--- Complete computing deps {:l {}}              # <= post_visit_edge(:done, _, _, _)
-- Chained deps                                  #
-- Complete computing deps {:m {}}               # <= post_visit_edge(:done, _, _, _)
-Chained deps                                    #
-Add nodes for input path {:o {}}
-- Computing :p dependencies for {:o {}}
-- Processing dependency {:o {}}
-- Process attribute :o
-- Add nodes for input path {:n {}}
--- Computing :o dependencies for {:n {}}
--- Processing dependency {:n {}}
--- Process attribute :n
--- Add nodes for input path {:l {}}
---- Computing :n dependencies for {:l {}}
---- Processing dependency {:l {}}
---- Process attribute :l
---- Add nodes for input path {:e {}}
----- Computing :l dependencies for {:e {}}
----- Processing dependency {:e {}}
----- Process attribute :e
----- Add nodes for input path {:c {}}
------ Computing :e dependencies for {:c {}}
------ Processing dependency {:c {}}
------ Process attribute :c
------ Add nodes for input path {}
------ Complete computing deps {:c {}}
----- Chained deps
----- Complete computing deps {:e {}}
---- Chained deps
---- Complete computing deps {:l {}}
--- Chained deps
--- Complete computing deps {:n {}}
-- Chained deps
-- Add nodes for input path {:z {}}
--- Computing :p dependencies for {:z {}}
--- Processing dependency {:z {}}
--- Process attribute :z
--- Add nodes for input path {:y {}}
---- Computing :z dependencies for {:y {}}
---- Processing dependency {:y {}}
---- Process attribute :y
---- Add nodes for input path {:s {}}
----- Computing :y dependencies for {:s {}}
----- Processing dependency {:s {}}
----- Process attribute :s
----- Add nodes for input path {:r {}, :w {}}
------ Computing :s dependencies for {:r {}, :w {}}
------ Processing dependency {:r {}}
------ Process attribute :r
------ Add nodes for input path {:q {}}
------- Computing :r dependencies for {:q {}}
------- Processing dependency {:q {}}
------- Process attribute :q
------- Add nodes for input path {}
------- Complete computing deps {:q {}}
------ Chained deps
------ Processing dependency {:w {}}
------ Process attribute :w
------ Add nodes for input path {:v {}}
------- Computing :w dependencies for {:v {}}
------- Processing dependency {:v {}}
------- Process attribute :v
------- Add nodes for input path {:t {}}
-------- Computing :v dependencies for {:t {}}
-------- Processing dependency {:t {}}
-------- Process attribute :t
-------- Add nodes for input path {}
-------- Complete computing deps {:t {}}
------- Chained deps
------- Add nodes for input path {:u {}}
-------- Computing :v dependencies for {:u {}}
-------- Processing dependency {:u {}}
-------- Process attribute :u
-------- Add nodes for input path {}
-------- Complete computing deps {:u {}}
------- Chained deps
------- Create root OR
------- Complete computing deps {:v {}}
------ Chained deps
------ Create root AND
------ Complete computing deps {:r {}, :w {}}
----- Chained deps
----- Complete computing deps {:s {}}
---- Chained deps
---- Add nodes for input path {:ac {}}
----- Computing :y dependencies for {:ac {}}
----- Processing dependency {:ac {}}
----- Process attribute :ac
----- Add nodes for input path {:ad {}}
------ Computing :ac dependencies for {:ad {}}
------ Processing dependency {:ad {}}
------ Process attribute :ad
------ Add nodes for input path {ae: {}}
------- Computing :ad dependencies for {:ae {}}
------- Processing dependency {:ae {}}
------- Process attribute :ae
------- Add nodes for input path {}
------- Complete computing deps {:ae {}}
------ Chained deps
------ Complete computing deps {:ad {}}
----- Chained deps
----- Complete computing deps {:ac {}}
---- Chained deps
---- Create root OR
---- Complete computing deps {:y {}}
--- Chained deps
--- Add nodes for input path {:ab {}}
---- Computing :z dependencies for {:ab {}}
---- Processing dependency {:ab {}}
---- Process attribute :ab
---- Add nodes for input path {:aa {}}
----- Computing :ab dependencies for {:aa {}}
----- Processing dependency {:aa {}}
----- Mark path {:aa {}} as unreachable.
----- Failed to compute dependencies {:aa {}}
---- Add nodes for input path {:af {}}
----- Computing :ab dependencies for {:af {}}
----- Processing dependency {:af {}}
----- Process attribute :af
----- Add nodes for input path {:ae {}}
------ Computing :af dependencies for {:ae {}}
------ Processing dependency {:ae {}}
------ Process attribute :ae
------ Add nodes for input path {}
------ Complete computing deps {:ae {}}
----- Chained deps
----- Complete computing deps {:af {}}
---- Chained deps
---- Add nodes for input path {:ad {}}
----- Computing :ab dependencies for {:ad {}}
----- Processing dependency {:ad {}}
----- Process attribute :ad
----- Add nodes for input path {:ae {}}
------ Computing :ad dependencies for {:ae {}}
------ Processing dependency {:ae {}}
------ Process attribute :ae
------ Add nodes for input path {}
------ Complete computing deps {:ae {}}
----- Chained deps
----- Complete computing deps {:ad {}}
---- Chained deps
---- Create root OR
---- Complete computing deps {:ab {}}
--- Chained deps
--- Create root OR
--- Complete computing deps {:z {}}
-- Chained deps
-- Create root OR
-- Complete computing deps {:o {}}
-Chained deps
-Add nodes for input path {:k {}}
-- Computing :p dependencies for {:k {}}
-- Processing dependency {:k {}}
-- Process attribute :k
-- Add nodes for input path {:g {}}
--- Computing :k dependencies for {:g {}}
--- Processing dependency {:g {}}
--- Process attribute :g
--- Add nodes for input path {:h {}}
---- Computing :g dependencies for {:h {}}
---- Processing dependency {:h {}}
---- Process attribute :h
---- Add nodes for input path {:i {}}
----- Computing :h dependencies for {:i {}}
----- Processing dependency {:i {}}
----- Process attribute :i
----- Add nodes for input path {:j {}}
------ Computing :i dependencies for {:j {}}
------ Processing dependency {:j {}}
------ Process attribute :j
------ Add nodes for input path {:g {}}
------- Computing :j dependencies for {:g {}}
------- Processing dependency {:g {}}
------- Attribute cycle detected for :g
------- Failed to compute dependencies for {:g {}}
------ Mark path {:j {}} as unreachable
------ Failed to compute dependencies for {:j {}}
----- Mark path {:i {}} as unreachable
----- Failed to compute dependencies for {:i {}}
---- Mark path {:h {}} as unreachable
---- Failed to compute dependencies for {:h {}}
--- Mark path {:g {}} as unreachable
--- Failed to compute dependencies for {:g {}}
-- Add nodes for input path {:f {}}
--- Computing :k dependencies for {:f {}}
--- Processing dependency {:f {}}
--- Process attribute :f
--- Add nodes for input path {:b {}, :d {}}
---- Computing :f dependencies for {:b {}, :d {}}
---- Processing dependency {:b {}}
---- Process attribute :b
---- Add nodes for input path {:a {}}
----- Computing :b dependencies for {:a {}}
----- Processing dependency {:a {}}
----- Mark path {:a {}} as unreachable
----- Failed to compute dependencies {:a {}}
---- Mark path {:b {}} as unreachable
---- Failed to compute dependencies {:b {}, :d {}}
--- Mark path {:f {}} as unreachable
--- Failed to compute dependencies {:f {}}
-- Mark path {:k {}} as unreachable
-- Failed to compute dependencies {:k {}}
-Create root OR
+_, {:pre, :attrs}
+  _, {:pre, :attr}
+    _, {:pre, :edges}
+      :pre_depth_inc, {:pre, :edge}
+      :post_depth_inc, {:pre, :edge}
+        _, {:pre, :attrs} | _, {:pre, :attr}
+          ...
+      :pre_depth_dec, {:post, :edge}
+      :post_depth_dec, {:post, :edge}
+    _, {:post, :edges}
+  _, {:post, :attr}
+_, {:post, :attrs}
+
+
+planner:
+  edge_stack: [{Edge.id(), Vertex.id()}]
+  edges_stack: [[{Edge.id(), Vertex.id()}] | nil]
+  attrs_stack: [[Vertex.id()] | nil]
+  
+
+{:pre, :attrs}, :cont, attrs, graph, planner
+  if availabile?, do: :done, else: :cont
+  push_to_attrs_stack(planner, attrs, [])
+
+{:pre, :attr}, :cont, attr, graph, planner
+  if availabile?, do: :done, else: :cont
+
+{:pre, :edges}, :cont, [edge], graph, planner
+  push_to_edges_stack(planner, nil)
+
+{:pre, :edges}, :cont, edges, graph, planner
+  push_to_edges_stack(planner, [])
+  
+{:pre, :edge}, :cont, {eid, _, _, rs}, graph, planner
+  {nid, planner} = add_or_node(planner, rid)
+  planner = add_to_edge_stack(planner, eid, nid)
+
+{:post, :edge}, cont, {eid, _, _, _}, graph, planner
+  {^eid, _} = peek_at_node_stack(planner)
+  {_, nid} = pop_node_stack(planner)
+  case cont do
+    :done ->
+      push_to_current_edges_stack(planner, eid, nid)
+      add_next_node(planner, ...)
+    {:halt, _} ->
+      cascade_delete_node(planner, nid)
+
+{:post, :edges}, cont, edges, graph, planner
+  case pop_current_edges_stack(planner) do
+    nil -> {cont, graph, planner}
+    {es, planner} -> 
+      case cont do
+        :done -> create_root_or_node(planner, branches)
+        {:halt, _} -> {cont, graph, planner}
+
+# {:post, :attr}, cont, attr, graph, planner
+
+{:post, :attrs}, cont, attrs, graph, planner
+  case pop_named_attrs_stack(planner, attrs) do
+    nil -> {cont, graph, planner}
+    {attributes, planner} ->
+      case cont do
+        :done -> create_root_and_node(planner, branches)
+        {:halt, _} -> {cont, graph, planner}
+        
+
+
+
+
+    Process attribute :p                                # _, {:pre, :attr}, _, :p                                 =>
+    Add nodes for input path {:m {}}                    # :pre_depth_inc, {:pre, :edge}, _, {_, :m, _, _}         => add_node(1, r8)
+01  - Computing :p dependencies for {:m {}}             # :post_depth_inc, {:pre, :edge}, _, {_, :m, :p, _}       =>
+01  - Processing dependency {:m {}}                     # :post_depth_inc, {:pre, :edge}, _, {_, :m, _, _}        =>
+01  - Process attribute :m                              # _, {:pre, :attr}, _, :m                                 =>
+01  - Add nodes for input path {:l {}}                  # :pre_depth_inc, {:pre, :edge}, _, {_, :l, _, _}         => add_node(2, r5)
+02  -- Computing :m dependencies {:l {}}                # :post_depth_inc, {:pre, :edge}, _, {_, :l, :m, _}       =>
+02  -- Processing depencency {:l {}}                    # :post_depth_inc, {:pre, :edge}, _, {_, :l, _, _}        =>
+02  -- Process attribute :l                             # _, {:pre, :attr}, _, :l                                 =>
+02  -- Add nodes for input path {:e {}}                 # :pre_depth_inc, {:pre, :edge}, _, {_, :e, _, _}         => add_node(3, r4)
+03  --- Computing :l dependencies {:e {}}               # :post_depth_inc, {:pre, :edge}, _, {_, :e, :l, _}       =>
+03  --- Processing dependency {:e {}}                   # :post_depth_inc, {:pre, :edge}, _, {_, :e, _, _}        =>
+03  --- Process attribute :e                            # _, {:pre, :attr}, _, :e                                 =>
+03  --- Add nodes for input path {:c {}}                # :pre_depth_inc, {:pre, :edge}, _, {_, :c, _, _}         => add_node(4, r3)
+04  ---- Computing :e dependencies {:c {}}              # :post_depth_inc, {:pre, :edge}, _, {_, :c, :e, _}       =>
+04  ---- Processing dependency {:c {}}                  # :post_depth_inc, {:pre, :edge}, _, {_, :c, _, _}        =>
+04  ---- Process attribute :c                           # _, {:pre, :attr}, _, :c                                 =>
+04  ---- Add nodes for input path {}                    # :pre_depth_inc, {:pre, :edge}, _, {_, [], _, _}         => add_node(5, s1)
+04  ---- Complete computing deps {:c {}}                # :pre_depth_dec, {:post, :edge}, :done, {_, _, :c, _}    =>
+03  --- Chained deps                                    # :post_depth_dec, {:post, edge}, :done, _                => add_edge(5, 4)
+03  --- Complete computing deps {:e {}}                 # :pre_depth_dec, {:post, :edge}, :done, {_, _, :e, _}    =>
+02  -- Chained deps                                     # :post_depth_dec, {:post, edge}, :done, _                => add_edge(4, 3)
+02  -- Complete computing deps {:l {}}                  # :pre_depth_dec, {:post, :edge}, :done, {_, _, :l, _}    =>
+01  - Chained deps                                      # :post_depth_dec, {:post, edge}, :done, _                => add_edge(3, 2)
+01  - Complete computing deps {:m {}}                   # :pre_depth_dec, {:post, :edge}, :done, {_, _, :m, _}    =>
+    Chained deps                                        # :post_depth_dec, {:post, edge}, :done, _                => add_edge(2, 1)
+    Add nodes for input path {:o {}}                    #                                                         => add_node(6, r9)
+06  - Computing :p dependencies for {:o {}}             #                                                         => 
+06  - Processing dependency {:o {}}                     #                                                         => 
+06  - Process attribute :o                              # _, {:pre, :attr}, _, :o                                 => 
+06  - Add nodes for input path {:n {}}                  #                                                         => add_node(7, r7)
+07  -- Computing :o dependencies for {:n {}}            #                                                         => 
+07  -- Processing dependency {:n {}}                    #                                                         => 
+07  -- Process attribute :n                             # _, {:pre, :attr}, _, :n                                 => 
+07  -- Add nodes for input path {:l {}}                 #                                                         => add_node(8, r6)
+08  --- Computing :n dependencies for {:l {}}           #                                                         => 
+08  --- Processing dependency {:l {}}                   #                                                         => 
+08  --- Process attribute :l                            # _, {:pre, :attr}, _, :l                                 => 
+08  --- Add nodes for input path {:e {}}                #                                                         => add_node(9, r4)
+09  ---- Computing :l dependencies for {:e {}}          #                                                         => 
+09  ---- Processing dependency {:e {}}                  #                                                         => 
+09  ---- Process attribute :e                           # _, {:pre, :attr}, _, :e                                 => 
+09  ---- Add nodes for input path {:c {}}               #                                                         => add_node(10, r3)
+10  ----- Computing :e dependencies for {:c {}}         #                                                         => 
+10  ----- Processing dependency {:c {}}                 #                                                         => 
+10  ----- Process attribute :c                          # _, {:pre, :attr}, _, :c                                 => 
+10  ----- Add nodes for input path {}                   #                                                         => add_node(11, s1)
+10  ----- Complete computing deps {:c {}}               #                                                         => 
+09  ---- Chained deps                                   #                                                         => add_edge(11, 10)
+09  ---- Complete computing deps {:e {}}                #                                                         => 
+08  --- Chained deps                                    #                                                         => add_edge(10, 9)
+08  --- Complete computing deps {:l {}}                 #                                                         => 
+07  -- Chained deps                                     #                                                         => add_edge(9, 8)
+07  -- Complete computing deps {:n {}}                  #                                                         => 
+06  - Chained deps                                      #                                                         => add_edge(8, 7)
+06  - Add nodes for input path {:z {}}                  # :pre_depth_inc, {:pre, :edge}, _, {_, :z, _, _}         => add_node(12, r23)
+12  -- Computing :p dependencies for {:z {}}            # :post_depth_inc, {:pre, :edge}, _, {_, :z, :p, _}       => 
+12  -- Processing dependency {:z {}}                    # _, {:pre, :attr}, _, :z, _, %{depth: d} when d > 0      => 
+12  -- Process attribute :z                             # _, {:pre, :attr}, _, :z                                 => 
+12  -- Add nodes for input path {:y {}}                 # :pre_depth_inc, {:pre, :edge}, _, {_, :y, _, _}         => add_node(13, r22)
+13  --- Computing :z dependencies for {:y {}}           # :post_depth_inc, {:pre, :edge}, _, {_, :y, :z, _}       => 
+13  --- Processing dependency {:y {}}                   # _, {:pre, :attr}, _, :y, _, %{depth: d} when d > 0      => 
+13  --- Process attribute :y                            # _, {:pre, :attr}, _, :y                                 => 
+13  --- Add nodes for input path {:s {}}                # :pre_depth_inc, {:pre, :edge}, _, {_, :s, _, _}         => add_node(14, r21)
+14  ---- Computing :y dependencies for {:s {}}          # :post_depth_inc, {:pre, :edge}, _, {_, :s, :y, _}       => 
+14  ---- Processing dependency {:s {}}                  # _, {:pre, :attr}, _, :s, _, %{depth: d} when d > 0      => 
+14  ---- Process attribute :s                           # _, {:pre, :attr}, _, :s                                 => 
+14  ---- Add nodes for input path {:r {}, :w {}}        # :pre_depth_inc, {:pre, :edge}, _, {_, [:r, :w], _, _}   => add_node(15, r20)
+15  ----- Computing :s dependencies for {:r {}, :w {}}  #                                                         => 
+15  ----- Processing dependency {:r {}}                 # _, {:pre, :attr}, _, :r, _, %{depth: d} when d > 0      => 
+15  ----- Process attribute :r                          # _, {:pre, :attr}, _, :r                                 => 
+15  ----- Add nodes for input path {:q {}}              #                                                         => add_node(16, r16)
+16  ------ Computing :r dependencies for {:q {}}        #                                                         => 
+16  ------ Processing dependency {:q {}}                #                                                         => 
+16  ------ Process attribute :q                         # _, {:pre, :attr}, _, :q                                 => 
+16  ------ Add nodes for input path {}                  #                                                         => add_node(17, s2)
+16  ------ Complete computing deps {:q {}}              #                                                         => 
+15  ----- Chained deps                                  #                                                         => add_edge(17, 16)
+15  ----- Processing dependency {:w {}}                 #                                                         => 
+15  ----- Process attribute :w                          # _, {:pre, :attr}, _, :w                                 => 
+15  ----- Add nodes for input path {:v {}}              #                                                         => add_node(18, r19)
+18  ------ Computing :w dependencies for {:v {}}        #                                                         => 
+18  ------ Processing dependency {:v {}}                #                                                         => 
+18  ------ Process attribute :v                         # _, {:pre, :attr}, _, :v                                 => 
+18  ------ Add nodes for input path {:t {}}             #                                                         => add_node(19, r17)
+19  ------- Computing :v dependencies for {:t {}}       #                                                         => 
+19  ------- Processing dependency {:t {}}               #                                                         => 
+19  ------- Process attribute :t                        # _, {:pre, :attr}, _, :t                                 => 
+19  ------- Add nodes for input path {}                 #                                                         => add_node(20, s3)
+19  ------- Complete computing deps {:t {}}             #                                                         => 
+18  ------ Chained deps                                 #                                                         => add_edge(20, 19)
+18  ------ Add nodes for input path {:u {}}             #                                                         => add_node(21, r18)
+21  ------- Computing :v dependencies for {:u {}}       #                                                         => 
+21  ------- Processing dependency {:u {}}               #                                                         => 
+21  ------- Process attribute :u                        # _, {:pre, :attr}, _, :u                                 => 
+21  ------- Add nodes for input path {}                 #                                                         => add_node(22, s4)
+21  ------- Complete computing deps {:u {}}             #                                                         => 
+18  ------ Chained deps                                 #                                                         => add_edge(22, 21)
+18  ------ Create root OR                               #                                                         => add_node(23, or, [20, 22])
+18  ------ Complete computing deps {:v {}}              #                                                         => 
+15  ----- Chained deps                                  #                                                         => add_edge(23, 18)
+15  ----- Create root AND                               #                                                         => add_node(24, and, [23, 17])
+15  ----- Complete computing deps {:r {}, :w {}}        #                                                         => 
+14  ---- Chained deps                                   #                                                         => add_edge(24, 15)
+14  ---- Complete computing deps {:s {}}                #                                                         => 
+13  --- Chained deps                                    #                                                         => add_edge(15, 14)
+13  --- Add nodes for input path {:ac {}}               #                                                         => add_node(25, r26)
+00  ---- Computing :y dependencies for {:ac {}}         #                                                         => 
+00  ---- Processing dependency {:ac {}}                 #                                                         => 
+00  ---- Process attribute :ac                          # _, {:pre, :attr}, _, :ac                                => 
+00  ---- Add nodes for input path {:ad {}}              #                                                         => add_node(26, r27)
+00  ----- Computing :ac dependencies for {:ad {}}       #                                                         => 
+00  ----- Processing dependency {:ad {}}                #                                                         => 
+00  ----- Process attribute :ad                         # _, {:pre, :attr}, _, :ad                                => 
+00  ----- Add nodes for input path {ae: {}}             #                                                         => add_node(27, r28)
+00  ------ Computing :ad dependencies for {:ae {}}      #                                                         => 
+00  ------ Processing dependency {:ae {}}               #                                                         => 
+00  ------ Process attribute :ae                        # _, {:pre, :attr}, _, :ae                                => 
+00  ------ Add nodes for input path {}                  #                                                         => add_node(28, s5)
+00  ------ Complete computing deps {:ae {}}             #                                                         => 
+00  ----- Chained deps                                  #                                                         => add_edge(28, 27)
+00  ----- Complete computing deps {:ad {}}              #                                                         => 
+00  ---- Chained deps                                   #                                                         => add_edge(27, 26)
+00  ---- Complete computing deps {:ac {}}               #                                                         => 
+00  --- Chained deps                                    #                                                         => add_edge(26, 25)
+00  --- Create root OR                                  #                                                         => add_node(29, or, [24, 28])
+00  --- Complete computing deps {:y {}}                 #                                                         => 
+00  -- Chained deps                                     #                                                         => add_edge(29, 13)
+00  -- Add nodes for input path {:ab {}}                #                                                         => add_node(30, r25)
+00  --- Computing :z dependencies for {:ab {}}          #                                                         => 
+00  --- Processing dependency {:ab {}}                  #                                                         => 
+00  --- Process attribute :ab                           # _, {:pre, :attr}, _, :ab                                => 
+00  --- Add nodes for input path {:aa {}}               #                                                         => add_node(31, r24)
+00  ---- Computing :ab dependencies for {:aa {}}        #                                                         => 
+00  ---- Processing dependency {:aa {}}                 #                                                         => 
+00  ---- Mark path {:aa {}} as unreachable.             #                                                         => 
+00  ---- Failed to compute dependencies {:aa {}}        #                                                         => remove_node(31)
+00  --- Add nodes for input path {:af {}}               #                                                         => add_node(32, r30)
+00  ---- Computing :ab dependencies for {:af {}}        #                                                         => 
+00  ---- Processing dependency {:af {}}                 #                                                         => 
+00  ---- Process attribute :af                          # _, {:pre, :attr}, _, :af                                => 
+00  ---- Add nodes for input path {:ae {}}              #                                                         => add_node(33, r29)
+00  ----- Computing :af dependencies for {:ae {}}       #                                                         => 
+00  ----- Processing dependency {:ae {}}                #                                                         => 
+00  ----- Process attribute :ae                         # _, {:pre, :attr}, _, :ae                                => 
+00  ----- Add nodes for input path {}                   #                                                         => add_node(34, s5)
+00  ----- Complete computing deps {:ae {}}              #                                                         => 
+00  ---- Chained deps                                   #                                                         => add_edge(34, 33)
+00  ---- Complete computing deps {:af {}}               #                                                         => 
+00  --- Chained deps                                    #                                                         => add_edge(33, 32)
+00  --- Add nodes for input path {:ad {}}               #                                                         => add_node(35, r31)
+00  ---- Computing :ab dependencies for {:ad {}}        #                                                         => 
+00  ---- Processing dependency {:ad {}}                 #                                                         => 
+00  ---- Process attribute :ad                          # _, {:pre, :attr}, _, :ad                                => 
+00  ---- Add nodes for input path {:ae {}}              #                                                         => add_node(36, r28)
+00  ----- Computing :ad dependencies for {:ae {}}       #                                                         => 
+00  ----- Processing dependency {:ae {}}                #                                                         => 
+00  ----- Process attribute :ae                         # _, {:pre, :attr}, _, :ae                                => 
+00  ----- Add nodes for input path {}                   #                                                         => add_node(37, s5)
+00  ----- Complete computing deps {:ae {}}              #                                                         => 
+00  ---- Chained deps                                   #                                                         => add_edge(37, 36)
+00  ---- Complete computing deps {:ad {}}               #                                                         => 
+00  --- Chained deps                                    #                                                         => add_edge(36, 35)
+00  --- Create root OR                                  #                                                         => add_node(38, or, [34, 37])
+00  --- Complete computing deps {:ab {}}                #                                                         => 
+00  -- Chained deps                                     #                                                         => add_edge(38, 30)
+00  -- Create root OR                                   #                                                         => add_node(39, or, [29, 38])
+00  -- Complete computing deps {:z {}}                  #                                                         => 
+00  - Chained deps                                      #                                                         => add_edge(39, 12)
+00  - Create root OR                                    #                                                         => add_node(40, or, [11, 39])
+00  - Complete computing deps {:o {}}                   #                                                         => 
+00  Chained deps                                        #                                                         => add_edge(40, 6)
+00  Add nodes for input path {:k {}}                    #                                                         => add_node(41, r33)
+00  - Computing :p dependencies for {:k {}}             #                                                         => 
+00  - Processing dependency {:k {}}                     #                                                         => 
+00  - Process attribute :k                              # _, {:pre, :attr}, _, :k                                 => 
+00  - Add nodes for input path {:g {}}                  #                                                         => add_node(42, r10)
+00  -- Computing :k dependencies for {:g {}}            #                                                         => 
+00  -- Processing dependency {:g {}}                    #                                                         => 
+00  -- Process attribute :g                             # _, {:pre, :attr}, _, :g                                 => 
+00  -- Add nodes for input path {:h {}}                 #                                                         => add_node(43, r11)
+00  --- Computing :g dependencies for {:h {}}           #                                                         => 
+00  --- Processing dependency {:h {}}                   #                                                         => 
+00  --- Process attribute :h                            # _, {:pre, :attr}, _, :h                                 => 
+00  --- Add nodes for input path {:i {}}                #                                                         => add_node(44, r12)
+00  ---- Computing :h dependencies for {:i {}}          #                                                         => 
+00  ---- Processing dependency {:i {}}                  #                                                         => 
+00  ---- Process attribute :i                           # _, {:pre, :attr}, _, :i                                 => 
+00  ---- Add nodes for input path {:j {}}               #                                                         => add_node(45, r13)
+00  ----- Computing :i dependencies for {:j {}}         #                                                         => 
+00  ----- Processing dependency {:j {}}                 #                                                         => 
+00  ----- Process attribute :j                          # _, {:pre, :attr}, _, :j                                 => 
+00  ----- Add nodes for input path {:g {}}              #                                                         => add_node(46, r14)
+00  ------ Computing :j dependencies for {:g {}}        #                                                         => 
+00  ------ Processing dependency {:g {}}                #                                                         => 
+00  ------ Attribute cycle detected for :g              #                                                         => 
+00  ------ Failed to compute dependencies for {:g {}}   #                                                         => remove_node(46)
+00  ----- Mark path {:j {}} as unreachable              #                                                         => 
+00  ----- Failed to compute dependencies for {:j {}}    #                                                         => remove_node(45)
+00  ---- Mark path {:i {}} as unreachable               #                                                         => 
+00  ---- Failed to compute dependencies for {:i {}}     #                                                         => remove_node(44)
+00  --- Mark path {:h {}} as unreachable                #                                                         => 
+00  --- Failed to compute dependencies for {:h {}}      #                                                         => remove_node(43)
+00  -- Mark path {:g {}} as unreachable                 #                                                         => 
+00  -- Failed to compute dependencies for {:g {}}       #                                                         => remove_node(42)
+00  - Add nodes for input path {:f {}}                  #                                                         => add_node(47, r32)
+00  -- Computing :k dependencies for {:f {}}            #                                                         => 
+00  -- Processing dependency {:f {}}                    #                                                         => 
+00  -- Process attribute :f                             # _, {:pre, :attr}, _, :f                                 => 
+00  -- Add nodes for input path {:b {}, :d {}}          #                                                         => add_node(48, r15)
+00  --- Computing :f dependencies for {:b {}, :d {}}    #                                                         => 
+00  --- Processing dependency {:b {}}                   #                                                         => 
+00  --- Process attribute :b                            # _, {:pre, :attr}, _, :b                                 => 
+00  --- Add nodes for input path {:a {}}                #                                                         => add_node(49, r1)
+00  ---- Computing :b dependencies for {:a {}}          #                                                         => 
+00  ---- Processing dependency {:a {}}                  #                                                         => 
+00  ---- Mark path {:a {}} as unreachable               #                                                         => 
+00  ---- Failed to compute dependencies {:a {}}         #                                                         => remove_node(49)
+00  --- Mark path {:b {}} as unreachable                #                                                         => 
+00  --- Failed to compute dependencies {:b {}, :d {}}   #                                                         => remove_node(48)
+00  -- Mark path {:f {}} as unreachable                 #                                                         => 
+00  -- Failed to compute dependencies {:f {}}           #                                                         => remove_node(47)
+00  - Mark path {:k {}} as unreachable                  #                                                         => 
+00  - Failed to compute dependencies {:k {}}            #                                                         => remove_node(41)
+00  Create root OR                                      #                                                         => add_node(50, or, [5, 40])
 
 
 {
